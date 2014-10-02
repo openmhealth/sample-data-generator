@@ -59,6 +59,8 @@ public class Application {
     private DataPointGenerationService dataPointGenerationService;
 
     @Autowired
+//    @Qualifier("consoleDataPointWritingServiceImpl")
+    @Qualifier("fileSystemDataPointWritingServiceImpl")
     private DataPointWritingService dataPointWritingService;
 
 
