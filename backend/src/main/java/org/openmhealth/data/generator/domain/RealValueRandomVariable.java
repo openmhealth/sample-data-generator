@@ -85,7 +85,7 @@ public class RealValueRandomVariable {
 
     public void setMinimum(Double minimum) {
 
-        checkArgument(minimum == null || maximum == null || minimum >= maximum);
+        checkArgument(minimum == null || maximum == null || minimum <= maximum);
 
         this.minimum = minimum;
     }
@@ -96,7 +96,7 @@ public class RealValueRandomVariable {
 
     public void setMaximum(Double maximum) {
 
-        checkArgument(minimum == null || maximum == null || minimum >= maximum);
+        checkArgument(minimum == null || maximum == null || minimum <= maximum);
 
         this.maximum = maximum;
     }
