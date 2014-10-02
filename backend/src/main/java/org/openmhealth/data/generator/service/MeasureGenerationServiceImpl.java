@@ -51,6 +51,10 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
         do {
             effectiveDateTime = effectiveDateTime.plus(poissonDistribution.sample(), SECONDS);
 
+            if (!effectiveDateTime.isBefore(request.getEndDateTime())) {
+                break;
+            }
+
             MeasureGroup measureGroup = new MeasureGroup();
             measureGroup.setEffectiveDateTime(effectiveDateTime);
 
@@ -69,7 +73,7 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
 
             measureGroups.add(measureGroup);
         }
-        while (effectiveDateTime.isBefore(request.getEndDateTime()));
+        while (true);
 
         return measureGroups;
     }
