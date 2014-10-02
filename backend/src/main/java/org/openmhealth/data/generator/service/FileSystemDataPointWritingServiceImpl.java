@@ -45,7 +45,9 @@ public class FileSystemDataPointWritingServiceImpl implements DataPointWritingSe
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
 
             for (DataPoint dataPoint : dataPoints) {
-                objectMapper.writeValue(writer, dataPoint);
+                String valueAsString = objectMapper.writeValueAsString(dataPoint);
+                writer.write(valueAsString);
+                writer.write("\n");
             }
         }
     }
