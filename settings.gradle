@@ -1,0 +1,6 @@
+rootProject.name = 'data-generator'
+
+include 'backend'
+
+include 'frontend'
+

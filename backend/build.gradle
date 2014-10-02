@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'spring-boot' // used for blessed dependencies and auto-configuration
+
+sourceCompatibility = 1.8
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.1.7.RELEASE"
+    }
+}
+
+dependencies {
+    versionManagement 'io.spring.platform:platform-versions:1.0.2.RELEASE@properties'
+
+    compile 'org.apache.commons:commons-lang3'
+    compile 'org.apache.commons:commons-math3:3.3'
+    compile 'com.google.guava:guava'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.2' // platform's still on 2.3.4, 2.4 required for Java 8
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.2'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.2'
+    compile 'org.slf4j:jcl-over-slf4j'
+    compile 'joda-time:joda-time'
+    compile 'org.slf4j:log4j-over-slf4j'
+    compile 'ch.qos.logback:logback-classic'
+    compile 'org.slf4j:slf4j-api'
+    compile 'org.yaml:snakeyaml'
+    compile 'org.springframework:spring-beans'
+    compile "org.springframework.boot:spring-boot-autoconfigure:1.1.7.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter:1.1.7.RELEASE"
+    compile 'org.springframework:spring-context'
+
+    testCompile 'org.hamcrest:hamcrest-library'
+    testCompile 'junit:junit'
+    testCompile 'org.mockito:mockito-core'
+    testCompile 'org.springframework:spring-test'
+}
