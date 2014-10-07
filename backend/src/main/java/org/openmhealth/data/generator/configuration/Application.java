@@ -70,6 +70,9 @@ public class Application {
     private BodyWeightDataPointGenerationServiceImpl bodyWeightDataPointGenerationService;
 
     @Autowired
+    private StepCountDataPointGenerationServiceImpl stepCountDataPointGenerationService;
+
+    @Autowired
     //    @Qualifier("consoleDataPointWritingServiceImpl")
     @Qualifier("fileSystemDataPointWritingServiceImpl")
     private DataPointWritingService dataPointWritingService;
@@ -84,8 +87,8 @@ public class Application {
     }
 
     static {
-        System.setProperty("data.owner", "sampledata@openmhealth.org_45");
-        System.setProperty("filename", "1yr-data.json");
+        System.setProperty("data.owner", "emerson@openmhealth.org_43");
+        System.setProperty("filename", "step-data.json");
     }
 
     public void run() throws IOException {
@@ -96,9 +99,10 @@ public class Application {
         List<DataPoint> dataPoints = new ArrayList<>();
 
         // comment out as needed
-        addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
-        addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
-        addAll(dataPoints, newHeartRateDataPoints(startDateTime, endDateTime, 80, 80));
+//        addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
+//        addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
+//        addAll(dataPoints, newHeartRateDataPoints(startDateTime, endDateTime, 80, 80));
+        addAll(dataPoints, newStepCountPoints(startDateTime, endDateTime, 60, 60, 90, 90));
 
         dataPointWritingService.writeDataPoints(dataPoints);
 
@@ -166,5 +170,28 @@ public class Application {
         Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
 
         return heartRateDataPointGenerationService.generateDataPoints(measureGroups);
+    }
+
+    public Iterable<DataPoint> newStepCountPoints(OffsetDateTime startDateTime, OffsetDateTime endDateTime,
+            double durationStart, double durationEnd, double stepsPerMinStart, double stepsPerMinEnd) {
+
+        RealValueRandomVariable durationRandomVariable = new RealValueRandomVariable(45, 10, 1800);
+        RealValueRandomVariable stepsPerMinRandomVariable = new RealValueRandomVariable(5, 30, 125);
+
+        RealValueRandomVariableTrend durationTrend =
+                new RealValueRandomVariableTrend(durationRandomVariable, durationStart, durationEnd);
+        RealValueRandomVariableTrend stepsPerMinTrend =
+                new RealValueRandomVariableTrend(stepsPerMinRandomVariable, stepsPerMinStart, stepsPerMinEnd);
+
+        MeasureGenerationRequest request = new MeasureGenerationRequest();
+        request.setStartDateTime(startDateTime);
+        request.setEndDateTime(endDateTime);
+        request.setMeanInterPointDuration(Duration.ofMinutes(30));
+        request.addMeasureValueTrend("duration", durationTrend);
+        request.addMeasureValueTrend("stepsPerMin", stepsPerMinTrend);
+
+        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+
+        return stepCountDataPointGenerationService.generateDataPoints(measureGroups);
     }
 }
