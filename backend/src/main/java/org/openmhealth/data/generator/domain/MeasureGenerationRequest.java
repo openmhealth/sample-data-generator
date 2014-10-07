@@ -31,6 +31,7 @@ public class MeasureGenerationRequest {
     private OffsetDateTime endDateTime;
     private Map<String, RealValueRandomVariableTrend> measureValueTrends = new HashMap<>();
     private Duration meanInterPointDuration;
+    private boolean suppressNightTimeMeasures = true;
 
     public OffsetDateTime getStartDateTime() {
         return startDateTime;
@@ -66,5 +67,13 @@ public class MeasureGenerationRequest {
 
     public void setMeanInterPointDuration(Duration meanInterPointDuration) {
         this.meanInterPointDuration = meanInterPointDuration;
+    }
+
+    public boolean isSuppressNightTimeMeasures() {
+        return suppressNightTimeMeasures;
+    }
+
+    public void setSuppressNightTimeMeasures(boolean suppressNightTimeMeasures) {
+        this.suppressNightTimeMeasures = suppressNightTimeMeasures;
     }
 }

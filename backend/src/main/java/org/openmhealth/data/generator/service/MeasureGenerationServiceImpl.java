@@ -18,8 +18,8 @@ package org.openmhealth.data.generator.service;
 
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
-import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
 import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -53,6 +53,10 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
 
             if (!effectiveDateTime.isBefore(request.getEndDateTime())) {
                 break;
+            }
+
+            if (request.isSuppressNightTimeMeasures() && (effectiveDateTime.getHour() < 5 || effectiveDateTime.getHour() > 23)) {
+                continue;
             }
 
             MeasureGroup measureGroup = new MeasureGroup();
