@@ -31,7 +31,7 @@ import org.openmhealth.schema.pojos.generic.TimeFrame;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonRootName(value = BodyHeight.SCHEMA_BODY_HEIGHT, namespace = DataPoint.NAMESPACE)
-public class BodyHeight extends BaseDataPoint {
+public class BodyHeight implements DataPointBody {
 
     @JsonProperty(value = "body_height", required = true)
     private LengthUnitValue lengthUnitValue;

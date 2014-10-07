@@ -16,14 +16,14 @@
 
 package org.openmhealth.data.generator.configuration;
 
-import org.openmhealth.data.generator.domain.RealValueRandomVariable;
-import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.data.generator.service.DataPointGenerationService;
-import org.openmhealth.data.generator.service.DataPointWritingService;
-import org.openmhealth.data.generator.service.MeasureGenerationService;
+import org.openmhealth.data.generator.domain.RealValueRandomVariable;
+import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
+import org.openmhealth.data.generator.service.*;
 import org.openmhealth.schema.pojos.DataPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -37,6 +37,10 @@ import org.springframework.context.annotation.PropertySource;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.collect.Iterables.addAll;
 
 
 /**
@@ -51,15 +55,22 @@ import java.time.OffsetDateTime;
 @EnableConfigurationProperties
 public class Application {
 
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
+
     @Autowired
     private MeasureGenerationService measureGenerationService;
 
     @Autowired
-    @Qualifier("bloodPressureDataPointGenerationServiceImpl")
-    private DataPointGenerationService dataPointGenerationService;
+    private BloodPressureDataPointGenerationServiceImpl bloodPressureDataPointGenerationService;
 
     @Autowired
-//    @Qualifier("consoleDataPointWritingServiceImpl")
+    private HeartRateDataPointGenerationServiceImpl heartRateDataPointGenerationService;
+
+    @Autowired
+    private BodyWeightDataPointGenerationServiceImpl bodyWeightDataPointGenerationService;
+
+    @Autowired
+    //    @Qualifier("consoleDataPointWritingServiceImpl")
     @Qualifier("fileSystemDataPointWritingServiceImpl")
     private DataPointWritingService dataPointWritingService;
 
@@ -72,25 +83,88 @@ public class Application {
         application.run();
     }
 
+    static {
+        System.setProperty("data.owner", "sampledata@openmhealth.org_45");
+        System.setProperty("filename", "1yr-data.json");
+    }
+
     public void run() throws IOException {
 
-        RealValueRandomVariable systolicRandomVariable = new RealValueRandomVariable(3, 100d, 140d);
-        RealValueRandomVariable diastolicRandomVariable = new RealValueRandomVariable(3, 60d, 100d);
+        OffsetDateTime startDateTime = OffsetDateTime.now().minusYears(1);
+        OffsetDateTime endDateTime = OffsetDateTime.now().minusDays(1);
 
-        RealValueRandomVariableTrend systolicTrend = new RealValueRandomVariableTrend(systolicRandomVariable, 110, 130);
-        RealValueRandomVariableTrend diastolicTrend = new RealValueRandomVariableTrend(diastolicRandomVariable, 70, 90);
+        List<DataPoint> dataPoints = new ArrayList<>();
+
+        // comment out as needed
+        addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
+        addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
+        addAll(dataPoints, newHeartRateDataPoints(startDateTime, endDateTime, 80, 80));
+
+        dataPointWritingService.writeDataPoints(dataPoints);
+
+        log.info("A total of {} data point(s) have been generated.", dataPoints.size());
+    }
+
+    public Iterable<DataPoint> newBloodPressureDataPoints(OffsetDateTime startDateTime, OffsetDateTime endDateTime,
+            double systolicStart, double systolicEnd, double diastolicStart, double diastolicEnd) {
+
+        RealValueRandomVariable systolicRandomVariable = new RealValueRandomVariable(3, 100d, 140d);
+        RealValueRandomVariable diastolicRandomVariable = new RealValueRandomVariable(3, 60d, 80d);
+
+        RealValueRandomVariableTrend systolicTrend =
+                new RealValueRandomVariableTrend(systolicRandomVariable, systolicStart, systolicEnd);
+        RealValueRandomVariableTrend diastolicTrend =
+                new RealValueRandomVariableTrend(diastolicRandomVariable, diastolicStart, diastolicEnd);
 
         MeasureGenerationRequest request = new MeasureGenerationRequest();
-        request.setStartDateTime(OffsetDateTime.now().minusDays(2));
-        request.setEndDateTime(OffsetDateTime.now().minusDays(1));
-        request.setMeanInterPointDuration(Duration.ofHours(6));
+        request.setStartDateTime(startDateTime);
+        request.setEndDateTime(endDateTime);
+        request.setMeanInterPointDuration(Duration.ofHours(24));
         request.addMeasureValueTrend("systolic", systolicTrend);
         request.addMeasureValueTrend("diastolic", diastolicTrend);
 
         Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
 
-        Iterable<DataPoint> dataPoints = dataPointGenerationService.generateDataPoints(measureGroups);
+        return bloodPressureDataPointGenerationService.generateDataPoints(measureGroups);
+    }
 
-        dataPointWritingService.writeDataPoints(dataPoints);
+    public Iterable<DataPoint> newBodyWeightDataPoints(OffsetDateTime startDateTime, OffsetDateTime endDateTime,
+            double weightStart, double weightEnd) {
+
+        double minimum = Math.min(weightStart, weightEnd) - 5;
+        double maximum = Math.max(weightStart, weightEnd) + 5;
+        RealValueRandomVariable weightRandomVariable = new RealValueRandomVariable(0.1, minimum, maximum);
+
+        RealValueRandomVariableTrend weightTrend =
+                new RealValueRandomVariableTrend(weightRandomVariable, weightStart, weightEnd);
+
+        MeasureGenerationRequest request = new MeasureGenerationRequest();
+        request.setStartDateTime(startDateTime);
+        request.setEndDateTime(endDateTime);
+        request.setMeanInterPointDuration(Duration.ofHours(24));
+        request.addMeasureValueTrend("weight", weightTrend);
+
+        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+
+        return bodyWeightDataPointGenerationService.generateDataPoints(measureGroups);
+    }
+
+    public Iterable<DataPoint> newHeartRateDataPoints(OffsetDateTime startDateTime, OffsetDateTime endDateTime,
+            double heartRateStart, double heartRateEnd) {
+
+        RealValueRandomVariable heartRateRandomVariable = new RealValueRandomVariable(5, 50, 200);
+
+        RealValueRandomVariableTrend heartRateTrend =
+                new RealValueRandomVariableTrend(heartRateRandomVariable, heartRateStart, heartRateEnd);
+
+        MeasureGenerationRequest request = new MeasureGenerationRequest();
+        request.setStartDateTime(startDateTime);
+        request.setEndDateTime(endDateTime);
+        request.setMeanInterPointDuration(Duration.ofHours(12));
+        request.addMeasureValueTrend("rate", heartRateTrend);
+
+        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+
+        return heartRateDataPointGenerationService.generateDataPoints(measureGroups);
     }
 }

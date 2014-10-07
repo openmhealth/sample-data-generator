@@ -16,11 +16,8 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.joda.time.DateTime;
 import org.openmhealth.data.generator.domain.MeasureGroup;
 import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.HeartRate;
-import org.openmhealth.schema.pojos.Metadata;
 import org.openmhealth.schema.pojos.builder.HeartRateBuilder;
 import org.springframework.stereotype.Service;
 
@@ -48,13 +45,7 @@ public class HeartRateDataPointGenerationServiceImpl extends AbstractDataPointGe
 
             builder.withRate(measureGroup.getMeasureValue("rate").intValue());
 
-            Metadata metadata = new Metadata();
-            metadata.setTimestamp(DateTime.now());
-
-            HeartRate dataPoint = builder.build();
-            dataPoint.setMetadata(metadata);
-
-            dataPoints.add(dataPoint);
+            dataPoints.add(newDataPoint(builder.build()));
         }
 
         return dataPoints;

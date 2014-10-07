@@ -34,7 +34,7 @@ import org.openmhealth.schema.pojos.serialize.PositionDuringMeasurementDeseriali
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonRootName(value = BloodPressure.SCHEMA_BLOOD_PRESSURE, namespace = DataPoint.NAMESPACE)
-public class BloodPressure extends BaseDataPoint {
+public class BloodPressure implements DataPointBody {
 
     @JsonProperty(value = "systolic_blood_pressure", required = false)
     private SystolicBloodPressure systolic;

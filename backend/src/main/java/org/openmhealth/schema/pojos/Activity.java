@@ -31,7 +31,7 @@ import org.openmhealth.schema.pojos.generic.TimeFrame;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonRootName(value = Activity.SCHEMA_ACTIVITY, namespace = DataPoint.NAMESPACE)
-public class Activity extends BaseDataPoint {
+public class Activity implements DataPointBody {
 
     @JsonProperty(value = "activity_name", required = true)
     private String activityName;

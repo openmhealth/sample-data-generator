@@ -16,16 +16,9 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.joda.time.DateTime;
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.Activity;
 import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.HeartRate;
-import org.openmhealth.schema.pojos.Metadata;
 import org.openmhealth.schema.pojos.builder.ActivityBuilder;
-import org.openmhealth.schema.pojos.builder.HeartRateBuilder;
-import org.openmhealth.schema.pojos.generic.DurationUnitValue;
-import org.openmhealth.schema.pojos.generic.LengthUnitValue;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,13 +48,7 @@ public class PhysicalActivityDataPointGenerationServiceImpl extends AbstractData
             builder.withStartAndDuration(convert(measureGroup.getEffectiveDateTime()), duration, min);
             builder.setDistance(measureGroup.getMeasureValue("distance"), m);
 
-            Metadata metadata = new Metadata();
-            metadata.setTimestamp(DateTime.now());
-
-            Activity dataPoint = builder.build();
-            dataPoint.setMetadata(metadata);
-
-            dataPoints.add(dataPoint);
+            dataPoints.add(newDataPoint(builder.build()));
         }
 
         return dataPoints;

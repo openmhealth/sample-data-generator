@@ -34,7 +34,7 @@ import org.openmhealth.schema.pojos.serialize.TemporalRelationshipToPhysicalActi
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonRootName(value = HeartRate.SCHEMA_HEART_RATE, namespace = DataPoint.NAMESPACE)
-public class HeartRate extends BaseDataPoint {
+public class HeartRate implements DataPointBody {
 
     @JsonProperty(value = "effective_time_frame", required = false)
     private TimeFrame effectiveTimeFrame;

@@ -16,20 +16,72 @@
 
 package org.openmhealth.schema.pojos;
 
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 /**
+ * Common code for data points, primarily related
+ * to metadata.
+ *
  * @author Danilo Bonilla
  */
-public interface DataPoint {
+public class DataPoint {
 
     public static final String NAMESPACE = "omh:normalized";
 
-    String getSchemaName();
+    @JsonProperty(value = "owner")
+    protected String owner;
 
-    DateTime getTimeStamp();
+    @JsonProperty(value = "schema_id")
+    protected String schemaId;
 
-    Metadata getMetadata();
+    @JsonProperty(value = "schema_version")
+    protected Long version = 1l;
 
+    @JsonProperty(value = "metadata")
+    protected Metadata metadata;
+
+    @JsonProperty(value = "data")
+    protected DataPointBody body;
+
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public DataPointBody getBody() {
+        return body;
+    }
+
+    public void setBody(DataPointBody body) {
+        this.body = body;
+        this.schemaId = body.getSchemaName();
+    }
 }

@@ -16,11 +16,8 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.joda.time.DateTime;
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.BodyWeight;
 import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.Metadata;
 import org.openmhealth.schema.pojos.builder.BodyWeightBuilder;
 import org.openmhealth.schema.pojos.generic.MassUnitValue;
 import org.springframework.stereotype.Service;
@@ -49,13 +46,7 @@ public class BodyWeightDataPointGenerationServiceImpl extends AbstractDataPointG
 
             builder.setWeight(measureGroup.getMeasureValue("weight"), MassUnitValue.MassUnit.kg);
 
-            Metadata metadata = new Metadata();
-            metadata.setTimestamp(DateTime.now());
-
-            BodyWeight dataPoint = builder.build();
-            dataPoint.setMetadata(metadata);
-
-            dataPoints.add(dataPoint);
+            dataPoints.add(newDataPoint(builder.build()));
         }
 
         return dataPoints;

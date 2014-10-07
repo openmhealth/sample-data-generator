@@ -16,11 +16,8 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.joda.time.DateTime;
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.BloodPressure;
 import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.Metadata;
 import org.openmhealth.schema.pojos.builder.BloodPressureBuilder;
 import org.springframework.stereotype.Service;
 
@@ -51,13 +48,7 @@ public class BloodPressureDataPointGenerationServiceImpl extends AbstractDataPoi
                     new BigDecimal(measureGroup.getMeasureValue("systolic")),
                     new BigDecimal(measureGroup.getMeasureValue("diastolic")));
 
-            Metadata metadata = new Metadata();
-            metadata.setTimestamp(DateTime.now());
-
-            BloodPressure dataPoint = builder.build();
-            dataPoint.setMetadata(metadata);
-
-            dataPoints.add(dataPoint);
+            dataPoints.add(newDataPoint(builder.build()));
         }
 
         return dataPoints;

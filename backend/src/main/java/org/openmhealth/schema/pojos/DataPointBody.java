@@ -16,25 +16,15 @@
 
 package org.openmhealth.schema.pojos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
 
 /**
- * Common code for data points, primarily related
- * to metadata.
- *
- * @author Danilo Bonilla
+ * @author Emerson Farrugia
  */
-public abstract class BaseDataPoint implements DataPoint {
+public interface DataPointBody {
 
-    @JsonProperty(value = "metadata")
-    protected Metadata metadata;
+    String getSchemaName();
 
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
+    DateTime getTimeStamp();
 }

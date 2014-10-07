@@ -36,7 +36,7 @@ import java.math.BigDecimal;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonRootName(value = BloodGlucose.SCHEMA_BLOOD_GLUCOSE, namespace = DataPoint.NAMESPACE)
-public class BloodGlucose extends BaseDataPoint {
+public class BloodGlucose implements DataPointBody {
 
     @JsonProperty(value = "blood_glucose", required = true)
     private BloodGlucoseUnitValue bloodGlucose;

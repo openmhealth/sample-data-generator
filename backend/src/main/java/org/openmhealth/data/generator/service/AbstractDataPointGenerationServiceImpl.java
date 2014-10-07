@@ -17,6 +17,10 @@
 package org.openmhealth.data.generator.service;
 
 import org.joda.time.DateTime;
+import org.openmhealth.schema.pojos.DataPoint;
+import org.openmhealth.schema.pojos.DataPointBody;
+import org.openmhealth.schema.pojos.Metadata;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.OffsetDateTime;
 
@@ -26,7 +30,24 @@ import java.time.OffsetDateTime;
  */
 public class AbstractDataPointGenerationServiceImpl {
 
+    @Value("${data.owner}")
+    private String owner;
+
     public DateTime convert(OffsetDateTime offsetDateTime) {
         return new DateTime(offsetDateTime.toEpochSecond() * 1_000);
+    }
+
+    public DataPoint newDataPoint(DataPointBody body) {
+
+        Metadata metadata = new Metadata();
+        metadata.setTimestamp(body.getTimeStamp());
+        metadata.setShimKey("sample");
+
+        DataPoint dataPoint = new DataPoint();
+        dataPoint.setOwner(owner);
+        dataPoint.setMetadata(metadata);
+        dataPoint.setBody(body);
+
+        return dataPoint;
     }
 }
