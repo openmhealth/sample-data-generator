@@ -45,7 +45,7 @@ public class HeartRateDataPointGenerationServiceImpl extends AbstractDataPointGe
 
             builder.withRate(measureGroup.getMeasureValue("rate").intValue());
 
-            dataPoints.add(newDataPoint(builder.build()));
+            dataPoints.add(newDataPoint(builder.build(), "fitbit"));
         }
 
         return dataPoints;

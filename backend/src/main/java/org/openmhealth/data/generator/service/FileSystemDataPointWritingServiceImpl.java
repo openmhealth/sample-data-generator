@@ -42,7 +42,7 @@ public class FileSystemDataPointWritingServiceImpl implements DataPointWritingSe
     @Override
     public void writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
 
             for (DataPoint dataPoint : dataPoints) {
                 String valueAsString = objectMapper.writeValueAsString(dataPoint);

@@ -37,11 +37,11 @@ public class AbstractDataPointGenerationServiceImpl {
         return new DateTime(offsetDateTime.toEpochSecond() * 1_000);
     }
 
-    public DataPoint newDataPoint(DataPointBody body) {
+    public DataPoint newDataPoint(DataPointBody body, String shim) {
 
         Metadata metadata = new Metadata();
         metadata.setTimestamp(body.getTimeStamp());
-        metadata.setShimKey("sample");
+        metadata.setShimKey(shim);
 
         DataPoint dataPoint = new DataPoint();
         dataPoint.setOwner(owner);

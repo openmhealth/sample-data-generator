@@ -82,6 +82,6 @@ public class DataPoint {
 
     public void setBody(DataPointBody body) {
         this.body = body;
-        this.schemaId = body.getSchemaName();
+        this.schemaId = NAMESPACE + ":" + body.getSchemaName();
     }
 }

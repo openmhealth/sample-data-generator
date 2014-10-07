@@ -48,7 +48,7 @@ public class PhysicalActivityDataPointGenerationServiceImpl extends AbstractData
             builder.withStartAndDuration(convert(measureGroup.getEffectiveDateTime()), duration, min);
             builder.setDistance(measureGroup.getMeasureValue("distance"), m);
 
-            dataPoints.add(newDataPoint(builder.build()));
+            dataPoints.add(newDataPoint(builder.build(), "runkeeper"));
         }
 
         return dataPoints;

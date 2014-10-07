@@ -46,7 +46,7 @@ public class BodyWeightDataPointGenerationServiceImpl extends AbstractDataPointG
 
             builder.setWeight(measureGroup.getMeasureValue("weight"), MassUnitValue.MassUnit.kg);
 
-            dataPoints.add(newDataPoint(builder.build()));
+            dataPoints.add(newDataPoint(builder.build(), "withings"));
         }
 
         return dataPoints;

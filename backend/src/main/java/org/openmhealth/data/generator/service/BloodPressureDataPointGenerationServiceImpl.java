@@ -48,7 +48,7 @@ public class BloodPressureDataPointGenerationServiceImpl extends AbstractDataPoi
                     new BigDecimal(measureGroup.getMeasureValue("systolic")),
                     new BigDecimal(measureGroup.getMeasureValue("diastolic")));
 
-            dataPoints.add(newDataPoint(builder.build()));
+            dataPoints.add(newDataPoint(builder.build(), "withings"));
         }
 
         return dataPoints;
