@@ -40,8 +40,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.addAll;
-
 
 /**
  * @author Emerson Farrugia
@@ -98,11 +96,11 @@ public class Application {
 
         List<DataPoint> dataPoints = new ArrayList<>();
 
-        // comment out as needed
+        // uncomment as needed
 //        addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
 //        addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
 //        addAll(dataPoints, newHeartRateDataPoints(startDateTime, endDateTime, 80, 80));
-        addAll(dataPoints, newStepCountPoints(startDateTime, endDateTime, 60, 60, 90, 90));
+//        addAll(dataPoints, newStepCountPoints(startDateTime, endDateTime, 120, 120, 90, 90));
 
         dataPointWritingService.writeDataPoints(dataPoints);
 
@@ -175,8 +173,8 @@ public class Application {
     public Iterable<DataPoint> newStepCountPoints(OffsetDateTime startDateTime, OffsetDateTime endDateTime,
             double durationStart, double durationEnd, double stepsPerMinStart, double stepsPerMinEnd) {
 
-        RealValueRandomVariable durationRandomVariable = new RealValueRandomVariable(45, 10, 1800);
-        RealValueRandomVariable stepsPerMinRandomVariable = new RealValueRandomVariable(5, 30, 125);
+        RealValueRandomVariable durationRandomVariable = new RealValueRandomVariable(100, 10, 1800);
+        RealValueRandomVariable stepsPerMinRandomVariable = new RealValueRandomVariable(15, 30, 125);
 
         RealValueRandomVariableTrend durationTrend =
                 new RealValueRandomVariableTrend(durationRandomVariable, durationStart, durationEnd);
