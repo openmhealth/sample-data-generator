@@ -16,7 +16,7 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.apache.commons.math3.distribution.PoissonDistribution;
+import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
 import org.openmhealth.data.generator.domain.MeasureGroup;
 import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
@@ -43,8 +43,8 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
     @Override
     public Iterable<MeasureGroup> generateMeasureGroups(MeasureGenerationRequest request) {
 
-        PoissonDistribution poissonDistribution =
-                new PoissonDistribution(request.getMeanInterPointDuration().getSeconds());
+        ExponentialDistribution distribution =
+                new ExponentialDistribution(request.getMeanInterPointDuration().getSeconds());
 
         long totalDurationInS = Duration.between(request.getStartDateTime(), request.getEndDateTime()).getSeconds();
 
@@ -52,7 +52,7 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
         List<MeasureGroup> measureGroups = new ArrayList<>();
 
         do {
-            effectiveDateTime = effectiveDateTime.plus(poissonDistribution.sample(), SECONDS);
+            effectiveDateTime = effectiveDateTime.plus((long) distribution.sample(), SECONDS);
 
             if (!effectiveDateTime.isBefore(request.getEndDateTime())) {
                 break;
