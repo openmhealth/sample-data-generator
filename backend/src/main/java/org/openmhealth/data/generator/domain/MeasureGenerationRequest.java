@@ -33,7 +33,7 @@ public class MeasureGenerationRequest {
     private OffsetDateTime endDateTime;
     private Map<String, RealValueRandomVariableTrend> measureValueTrends = new HashMap<>();
     private Duration meanInterPointDuration;
-    private boolean suppressNightTimeMeasures = true;
+    private boolean suppressNightTimeMeasures = false;
 
     /**
      * @return the earliest date time of the measures to generate. If the measures have time interval time frames,
