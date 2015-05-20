@@ -16,42 +16,63 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
+import com.google.common.collect.Iterables;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
+import org.openmhealth.data.generator.domain.MeasureGroup;
 import org.openmhealth.data.generator.domain.RealValueRandomVariable;
 import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.testng.annotations.Test;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 
 /**
  * @author Emerson Farrugia
  */
-@RunWith(BlockJUnit4ClassRunner.class)
 public class MeasureGenerationServiceUnitTests {
 
     private MeasureGenerationService service = new MeasureGenerationServiceImpl();
-    @Test
-    public void generateMeasureGroupsShouldWork() {
 
-        RealValueRandomVariable systolicRandomVariable = new RealValueRandomVariable(1);
-        systolicRandomVariable.setMinimum(50d);
-        systolicRandomVariable.setMaximum(90d);
+    @Test
+    public void generateMeasureGroupsShouldCreateMeasureGroups() {
+
+        String measureName = "systolic";
+        double minimumSystolicValue = 50d;
+        double maximumSystolicValue = 90d;
+
+        RealValueRandomVariable systolicRandomVariable =
+                new RealValueRandomVariable(1, minimumSystolicValue, maximumSystolicValue);
 
         RealValueRandomVariableTrend systolicTrend = new RealValueRandomVariableTrend(systolicRandomVariable, 60, 80);
 
+        OffsetDateTime startDateTime = OffsetDateTime.now().minusDays(500);
+        OffsetDateTime endDateTime = OffsetDateTime.now();
+
         MeasureGenerationRequest request = new MeasureGenerationRequest();
-        request.setStartDateTime(OffsetDateTime.now().minusDays(2));
-        request.setEndDateTime(OffsetDateTime.now().minusDays(1));
+        request.setStartDateTime(startDateTime);
+        request.setEndDateTime(endDateTime);
         request.setMeanInterPointDuration(Duration.ofHours(6));
-        request.addMeasureValueTrend("systolic", systolicTrend);
+        request.addMeasureValueTrend(measureName, systolicTrend);
 
-        Iterable<MeasureGroup> measureGroups = service.generateMeasureGroups(request);
+        Iterable<MeasureGroup> measureGroups;
 
-        System.out.println(measureGroups);
+        do {
+            measureGroups = service.generateMeasureGroups(request);
+        }
+        while (Iterables.size(measureGroups) == 0); // in the extremely unlikely case of an empty list
+
+        for (MeasureGroup measureGroup : measureGroups) {
+
+            assertThat(measureGroup.getMeasureValue(measureName), greaterThanOrEqualTo(minimumSystolicValue));
+            assertThat(measureGroup.getMeasureValue(measureName), lessThanOrEqualTo(maximumSystolicValue));
+
+            long effectiveDateTime = measureGroup.getEffectiveDateTime().toEpochSecond();
+            assertThat(effectiveDateTime, greaterThanOrEqualTo(startDateTime.toEpochSecond()));
+            assertThat(effectiveDateTime, lessThanOrEqualTo(endDateTime.toEpochSecond()));
+        }
     }
 }
