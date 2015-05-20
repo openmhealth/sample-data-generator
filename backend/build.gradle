@@ -1,45 +1,80 @@
+/*
+ * Copyright 2015 Open mHealth
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 apply plugin: 'java'
-apply plugin: 'spring-boot' // used for blessed dependencies and auto-configuration
-
-sourceCompatibility = 1.8
-version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
+apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
 
 buildscript {
     repositories {
-        mavenCentral()
+        mavenLocal()
+        jcenter()
     }
+
+    ext {
+        springBootVersion = '1.2.3.RELEASE'
+    }
+
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.1.7.RELEASE"
+        classpath 'io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE'
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+ext {
+    javaVersion = 1.8
+    omhSchemaSdkVersion = '1.0.1'
+}
+
+group = 'org.openmhealth.generator'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
     }
 }
 
 dependencies {
-    versionManagement 'io.spring.platform:platform-versions:1.0.2.RELEASE@properties'
-
-    compile 'org.apache.commons:commons-lang3'
     compile 'org.apache.commons:commons-math3:3.3'
-    compile 'com.google.guava:guava'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.4.2' // platform's still on 2.3.4, 2.4 required for Java 8
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.2'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.2'
+    compile 'com.google.guava:guava:18.0'
+    compile "com.fasterxml.jackson.core:jackson-annotations"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
     compile 'org.slf4j:jcl-over-slf4j'
-    compile 'joda-time:joda-time'
     compile 'org.slf4j:log4j-over-slf4j'
-    compile 'ch.qos.logback:logback-classic'
+    compile "org.openmhealth.schema:omh-schema-sdk:${omhSchemaSdkVersion}"
     compile 'org.slf4j:slf4j-api'
-    compile 'org.yaml:snakeyaml'
     compile 'org.springframework:spring-beans'
-    compile "org.springframework.boot:spring-boot-autoconfigure:1.1.7.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter:1.1.7.RELEASE"
+    compile "org.springframework.boot:spring-boot-autoconfigure"
     compile 'org.springframework:spring-context'
 
     testCompile 'org.hamcrest:hamcrest-library'
     testCompile 'junit:junit'
     testCompile 'org.mockito:mockito-core'
     testCompile 'org.springframework:spring-test'
+
+    runtime 'ch.qos.logback:logback-classic'
 }
