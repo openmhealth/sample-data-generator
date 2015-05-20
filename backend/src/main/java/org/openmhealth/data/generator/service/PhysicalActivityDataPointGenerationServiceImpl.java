@@ -17,40 +17,32 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.builder.ActivityBuilder;
+import org.openmhealth.schema.domain.omh.DurationUnitValue;
+import org.openmhealth.schema.domain.omh.LengthUnitValue;
+import org.openmhealth.schema.domain.omh.PhysicalActivity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.openmhealth.schema.pojos.generic.DurationUnitValue.DurationUnit.min;
-import static org.openmhealth.schema.pojos.generic.LengthUnitValue.LengthUnit.m;
+import static org.openmhealth.schema.domain.omh.DurationUnit.SECOND;
+import static org.openmhealth.schema.domain.omh.LengthUnit.METER;
+import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndDuration;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Service
-public class PhysicalActivityDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl
-        implements DataPointGenerationService {
+public class PhysicalActivityDataPointGenerationServiceImpl
+        extends AbstractDataPointGenerationServiceImpl<PhysicalActivity> {
 
     @Override
-    public Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public PhysicalActivity newMeasure(MeasureGroup measureGroup) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
+        DurationUnitValue duration = new DurationUnitValue(SECOND, measureGroup.getMeasureValue("durationInSec"));
+        LengthUnitValue distance = new LengthUnitValue(METER, measureGroup.getMeasureValue("distance"));
 
-        for (MeasureGroup measureGroup : measureGroups) {
-
-            ActivityBuilder builder = new ActivityBuilder();
-
-            double duration = measureGroup.getMeasureValue("duration");
-            builder.withStartAndDuration(convert(measureGroup.getEffectiveDateTime()), duration, min);
-            builder.setDistance(measureGroup.getMeasureValue("distance"), m);
-
-            dataPoints.add(newDataPoint(builder.build(), "runkeeper"));
-        }
-
-        return dataPoints;
+        return new PhysicalActivity.Builder("some activity")
+                .setEffectiveTimeFrame(ofStartDateTimeAndDuration(measureGroup.getEffectiveDateTime(), duration))
+                .setDistance(distance)
+                .build();
     }
 }

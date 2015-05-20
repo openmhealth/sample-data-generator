@@ -17,13 +17,14 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
+import org.openmhealth.schema.domain.omh.DataPoint;
+import org.openmhealth.schema.domain.omh.Measure;
 
 
 /**
  * @author Emerson Farrugia
  */
-public interface DataPointGenerationService {
+public interface DataPointGenerationService<T extends Measure> {
 
-    Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups);
+    Iterable<DataPoint<T>> generateDataPoints(Iterable<MeasureGroup> measureGroups);
 }

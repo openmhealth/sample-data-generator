@@ -17,37 +17,21 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.builder.HeartRateBuilder;
+import org.openmhealth.schema.domain.omh.HeartRate;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Service
-public class HeartRateDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl
-        implements DataPointGenerationService {
+public class HeartRateDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<HeartRate> {
 
     @Override
-    public Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public HeartRate newMeasure(MeasureGroup measureGroup) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
-
-        for (MeasureGroup measureGroup : measureGroups) {
-
-            HeartRateBuilder builder = new HeartRateBuilder();
-
-            builder.withTimeTaken(convert(measureGroup.getEffectiveDateTime()));
-
-            builder.withRate(measureGroup.getMeasureValue("rate").intValue());
-
-            dataPoints.add(newDataPoint(builder.build(), "fitbit"));
-        }
-
-        return dataPoints;
+        return new HeartRate.Builder(measureGroup.getMeasureValue("rate"))
+                .setEffectiveTimeFrame(measureGroup.getEffectiveDateTime())
+                .build();
     }
 }

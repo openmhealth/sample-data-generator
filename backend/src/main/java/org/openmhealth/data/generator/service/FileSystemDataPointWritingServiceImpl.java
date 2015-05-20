@@ -17,7 +17,7 @@
 package org.openmhealth.data.generator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openmhealth.schema.pojos.DataPoint;
+import org.openmhealth.schema.domain.omh.DataPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ import java.io.IOException;
 @Service
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
-    @Value("${filename}")
+    @Value("${outputFilename}")
     private String filename;
 
     @Autowired

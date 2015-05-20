@@ -17,38 +17,24 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.builder.BodyWeightBuilder;
-import org.openmhealth.schema.pojos.generic.MassUnitValue;
+import org.openmhealth.schema.domain.omh.BodyWeight;
+import org.openmhealth.schema.domain.omh.MassUnitValue;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.openmhealth.schema.domain.omh.MassUnit.KILOGRAM;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Service
-public class BodyWeightDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl
-        implements DataPointGenerationService {
+public class BodyWeightDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<BodyWeight> {
 
     @Override
-    public Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public BodyWeight newMeasure(MeasureGroup measureGroup) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
-
-        for (MeasureGroup measureGroup : measureGroups) {
-
-            BodyWeightBuilder builder = new BodyWeightBuilder();
-
-            builder.setTimeTaken(convert(measureGroup.getEffectiveDateTime()));
-
-            builder.setWeight(measureGroup.getMeasureValue("weight"), MassUnitValue.MassUnit.kg);
-
-            dataPoints.add(newDataPoint(builder.build(), "withings"));
-        }
-
-        return dataPoints;
+        return new BodyWeight.Builder(new MassUnitValue(KILOGRAM, measureGroup.getMeasureValue("weight")))
+                .setEffectiveTimeFrame(measureGroup.getEffectiveDateTime())
+                .build();
     }
 }

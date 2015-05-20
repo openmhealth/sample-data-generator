@@ -17,40 +17,28 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.builder.BloodPressureBuilder;
+import org.openmhealth.schema.domain.omh.BloodPressure;
+import org.openmhealth.schema.domain.omh.DiastolicBloodPressure;
+import org.openmhealth.schema.domain.omh.SystolicBloodPressure;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import static org.openmhealth.schema.domain.omh.BloodPressureUnit.MM_OF_MERCURY;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Service
-public class BloodPressureDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl
-        implements DataPointGenerationService {
+public class BloodPressureDataPointGenerationServiceImpl
+        extends AbstractDataPointGenerationServiceImpl<BloodPressure> {
 
     @Override
-    public Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public BloodPressure newMeasure(MeasureGroup measureGroup) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
-
-        for (MeasureGroup measureGroup : measureGroups) {
-
-            BloodPressureBuilder builder = new BloodPressureBuilder();
-
-            builder.setTimeTaken(convert(measureGroup.getEffectiveDateTime()));
-
-            builder.setValues(
-                    new BigDecimal(measureGroup.getMeasureValue("systolic")),
-                    new BigDecimal(measureGroup.getMeasureValue("diastolic")));
-
-            dataPoints.add(newDataPoint(builder.build(), "withings"));
-        }
-
-        return dataPoints;
+        return new BloodPressure.Builder(
+                new SystolicBloodPressure(MM_OF_MERCURY, measureGroup.getMeasureValue("systolic")),
+                new DiastolicBloodPressure(MM_OF_MERCURY, measureGroup.getMeasureValue("diastolic")))
+                .setEffectiveTimeFrame(measureGroup.getEffectiveDateTime())
+                .build();
     }
 }

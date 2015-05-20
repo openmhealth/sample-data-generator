@@ -17,39 +17,30 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.pojos.DataPoint;
-import org.openmhealth.schema.pojos.builder.StepCountBuilder;
+import org.openmhealth.schema.domain.omh.DurationUnitValue;
+import org.openmhealth.schema.domain.omh.StepCount;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.openmhealth.schema.pojos.generic.DurationUnitValue.DurationUnit.sec;
+import static org.openmhealth.schema.domain.omh.DurationUnit.SECOND;
+import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndDuration;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Service
-public class StepCountDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl
-        implements DataPointGenerationService {
+public class StepCountDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<StepCount> {
 
     @Override
-    public Iterable<DataPoint> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public StepCount newMeasure(MeasureGroup measureGroup) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
+        DurationUnitValue duration = new DurationUnitValue(SECOND, measureGroup.getMeasureValue("durationInSec"));
+        double stepsPerMin = measureGroup.getMeasureValue("stepsPerMin");
 
-        for (MeasureGroup measureGroup : measureGroups) {
+        double stepCount = stepsPerMin * duration.getValue().doubleValue() / 60.0;
 
-            StepCountBuilder builder = new StepCountBuilder();
-
-            double duration = measureGroup.getMeasureValue("duration");
-            builder.withStartAndDuration(convert(measureGroup.getEffectiveDateTime()), duration, sec);
-            builder.setSteps(new Double((measureGroup.getMeasureValue("stepsPerMin") * duration) / 60.0).intValue());
-
-            dataPoints.add(newDataPoint(builder.build(), "fitbit"));
-        }
-
-        return dataPoints;
+        return new StepCount.Builder(stepCount)
+                .setEffectiveTimeFrame(ofStartDateTimeAndDuration(measureGroup.getEffectiveDateTime(), duration))
+                .build();
     }
 }

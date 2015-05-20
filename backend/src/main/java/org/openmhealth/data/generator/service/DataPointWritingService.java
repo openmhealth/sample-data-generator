@@ -16,7 +16,7 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.schema.pojos.DataPoint;
+import org.openmhealth.schema.domain.omh.DataPoint;
 
 import java.io.IOException;
 
