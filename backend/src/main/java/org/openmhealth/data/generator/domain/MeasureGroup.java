@@ -16,16 +16,13 @@
 
 package org.openmhealth.data.generator.domain;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * A group of measure values that share an effective date time.
+ * A group of measure values that share an effective time frame.
  *
  * @author Emerson Farrugia
  */
@@ -56,11 +53,5 @@ public class MeasureGroup {
 
     public Double getMeasureValue(String measure) {
         return this.measureValues.get(measure);
-    }
-
-    @Override
-    public String toString() {
-
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

@@ -16,9 +16,6 @@
 
 package org.openmhealth.data.generator.domain;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -111,14 +108,9 @@ public class RealValueRandomVariable {
             if ((minimum == null || nextValue >= minimum) && (maximum == null || nextValue <= maximum)) {
                 break;
             }
-        } while (true);
+        }
+        while (true);
 
         return nextValue;
-    }
-
-    @Override
-    public String toString() {
-
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

@@ -23,6 +23,8 @@ import java.util.Map;
 
 
 /**
+ * A request to generate measures.
+ *
  * @author Emerson Farrugia
  */
 public class MeasureGenerationRequest {
@@ -33,6 +35,10 @@ public class MeasureGenerationRequest {
     private Duration meanInterPointDuration;
     private boolean suppressNightTimeMeasures = true;
 
+    /**
+     * @return the earliest date time of the measures to generate. If the measures have time interval time frames,
+     * the earliest time interval start time will be no earlier than this date time.
+     */
     public OffsetDateTime getStartDateTime() {
         return startDateTime;
     }
@@ -41,6 +47,10 @@ public class MeasureGenerationRequest {
         this.startDateTime = startDateTime;
     }
 
+    /**
+     * @return the latest date time of the measures to generate. If the measures have time interval time frames,
+     * the latest time interval start time will be no later than this date time.
+     */
     public OffsetDateTime getEndDateTime() {
         return endDateTime;
     }
@@ -49,6 +59,9 @@ public class MeasureGenerationRequest {
         this.endDateTime = endDateTime;
     }
 
+    /**
+     * @return a map of trends to be generated, with one key per measure value
+     */
     public Map<String, RealValueRandomVariableTrend> getMeasureValueTrends() {
         return measureValueTrends;
     }
@@ -61,6 +74,9 @@ public class MeasureGenerationRequest {
         this.measureValueTrends.put(measure, trend);
     }
 
+    /**
+     * @return the mean duration between the effective time frames of consecutive measures
+     */
     public Duration getMeanInterPointDuration() {
         return meanInterPointDuration;
     }
@@ -69,6 +85,9 @@ public class MeasureGenerationRequest {
         this.meanInterPointDuration = meanInterPointDuration;
     }
 
+    /**
+     * @return true if measures should be generated having effective time frames at night, or false otherwise
+     */
     public boolean isSuppressNightTimeMeasures() {
         return suppressNightTimeMeasures;
     }

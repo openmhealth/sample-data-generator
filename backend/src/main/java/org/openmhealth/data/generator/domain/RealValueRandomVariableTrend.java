@@ -16,9 +16,6 @@
 
 package org.openmhealth.data.generator.domain;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -84,12 +81,6 @@ public class RealValueRandomVariableTrend {
 
         double mean = interpolate(fraction);
         return realValueRandomVariable.nextValue(mean);
-    }
-
-    @Override
-    public String toString() {
-
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
 
