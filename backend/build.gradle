@@ -25,7 +25,7 @@ buildscript {
     }
 
     ext {
-        springBootVersion = '1.2.3.RELEASE'
+        springBootVersion = '1.2.5.RELEASE'
     }
 
     dependencies {
@@ -41,7 +41,7 @@ repositories {
 
 ext {
     javaVersion = 1.8
-    omhSchemaSdkVersion = '1.0.1'
+    omhSchemaSdkVersion = '1.0.2'
 }
 
 group = 'org.openmhealth.generator'
