@@ -37,7 +37,7 @@ import static org.openmhealth.schema.domain.omh.DataPointModality.SENSED;
 public abstract class AbstractDataPointGenerationServiceImpl<T extends Measure>
         implements DataPointGenerationService<T> {
 
-    @Value("${data.userId}")
+    @Value("${data.header.userId}")
     private String userId;
 
     @Value("${data.header.acquisitionProvenance.sourceName:generator}")
@@ -75,13 +75,9 @@ public abstract class AbstractDataPointGenerationServiceImpl<T extends Measure>
 
         DataPointHeader header = new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(), now())
                 .setAcquisitionProvenance(acquisitionProvenance)
+                .setUserId(userId)
                 .build();
 
-        DataPoint<T> dataPoint = new DataPoint<>(header, measure);
-
-        // TODO update this once it's part of the schema SDK
-        dataPoint.setAdditionalProperty("user_id", userId);
-
-        return dataPoint;
+        return new DataPoint<>(header, measure);
     }
 }
