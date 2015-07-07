@@ -67,9 +67,8 @@ public class Application {
 
     @Autowired
     @Qualifier("consoleDataPointWritingServiceImpl")
-    // @Qualifier("fileSystemDataPointWritingServiceImpl")
+//    @Qualifier("fileSystemDataPointWritingServiceImpl")
     private DataPointWritingService dataPointWritingService;
-
 
     public static void main(String[] args) throws IOException {
 
@@ -77,11 +76,6 @@ public class Application {
 
         Application application = applicationContext.getBean(Application.class);
         application.run();
-    }
-
-    static {
-        System.setProperty("data.userId", "joe");
-        System.setProperty("outputFilename", "step-data.json");
     }
 
     public void run() throws IOException {
@@ -93,7 +87,7 @@ public class Application {
 
         // uncomment as needed
         Iterables.addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
-        //              Iterables.addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
+//        Iterables.addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
         //              Iterables.addAll(dataPoints, newStepCountDataPoints(startDateTime, endDateTime, 120, 120, 90,
         // 90));
 
@@ -103,8 +97,8 @@ public class Application {
     }
 
     public Iterable<DataPoint<BloodPressure>> newBloodPressureDataPoints(OffsetDateTime startDateTime,
-            OffsetDateTime endDateTime,
-            double systolicStart, double systolicEnd, double diastolicStart, double diastolicEnd) {
+                                                                         OffsetDateTime endDateTime,
+                                                                         double systolicStart, double systolicEnd, double diastolicStart, double diastolicEnd) {
 
         // TODO use limits that reflect parameters
         RealValueRandomVariable systolicRandomVariable = new RealValueRandomVariable(3, 100d, 140d);
@@ -128,8 +122,8 @@ public class Application {
     }
 
     public Iterable<DataPoint<BodyWeight>> newBodyWeightDataPoints(OffsetDateTime startDateTime,
-            OffsetDateTime endDateTime,
-            double weightStart, double weightEnd) {
+                                                                   OffsetDateTime endDateTime,
+                                                                   double weightStart, double weightEnd) {
 
         double minimum = Math.min(weightStart, weightEnd) - 5;
         double maximum = Math.max(weightStart, weightEnd) + 5;
@@ -150,8 +144,8 @@ public class Application {
     }
 
     public Iterable<DataPoint<StepCount>> newStepCountDataPoints(OffsetDateTime startDateTime,
-            OffsetDateTime endDateTime,
-            double durationStart, double durationEnd, double stepsPerMinStart, double stepsPerMinEnd) {
+                                                                 OffsetDateTime endDateTime,
+                                                                 double durationStart, double durationEnd, double stepsPerMinStart, double stepsPerMinEnd) {
 
         // TODO use limits that reflect parameters
         RealValueRandomVariable durationInSecRandomVariable = new RealValueRandomVariable(100, 10, 1800);
