@@ -33,7 +33,7 @@ import java.io.IOException;
 @Service
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
-    @Value("${outputFilename}")
+    @Value("${output-filename}")
     private String filename;
 
     @Autowired
@@ -45,6 +45,9 @@ public class FileSystemDataPointWritingServiceImpl implements DataPointWritingSe
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
 
             for (DataPoint dataPoint : dataPoints) {
+                // this simplifies direct imports into MongoDB
+                dataPoint.setAdditionalProperty("id", dataPoint.getHeader().getId());
+
                 String valueAsString = objectMapper.writeValueAsString(dataPoint);
                 writer.write(valueAsString);
                 writer.write("\n");

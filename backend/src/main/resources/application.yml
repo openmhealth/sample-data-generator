@@ -1,3 +1,11 @@
+data:
+  header:
+    user-id: some-user
+    #acquisition-provenance:
+    #  source-name: generator
+
+output-filename: 1mo-weight.json
+
 spring:
   main:
     show-banner: false
