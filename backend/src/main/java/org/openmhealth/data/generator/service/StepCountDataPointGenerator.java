@@ -16,10 +16,13 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import com.google.common.collect.Sets;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 import org.openmhealth.schema.domain.omh.DurationUnitValue;
 import org.openmhealth.schema.domain.omh.StepCount;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 import static org.openmhealth.schema.domain.omh.DurationUnit.SECOND;
 import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndDuration;
@@ -29,18 +32,36 @@ import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndD
  * @author Emerson Farrugia
  */
 @Service
-public class StepCountDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<StepCount> {
+public class StepCountDataPointGenerator extends AbstractDataPointGeneratorImpl<StepCount> {
+
+    public static final String STEPS_PER_MINUTE_VALUE_KEY = "steps-per-minute";
+    public static final String DURATION_VALUE_KEY = "duration-in-seconds";
 
     @Override
-    public StepCount newMeasure(MeasureGroup measureGroup) {
+    public String getName() {
+        return "step-count";
+    }
 
-        DurationUnitValue duration = new DurationUnitValue(SECOND, measureGroup.getMeasureValue("durationInSec"));
-        double stepsPerMin = measureGroup.getMeasureValue("stepsPerMin");
+    @Override
+    public Set<String> getRequiredValueKeys() {
+        return Sets.newHashSet(DURATION_VALUE_KEY, STEPS_PER_MINUTE_VALUE_KEY);
+    }
+
+    @Override
+    public Set<String> getSupportedValueKeys() {
+        return Sets.newHashSet(DURATION_VALUE_KEY, STEPS_PER_MINUTE_VALUE_KEY);
+    }
+
+    @Override
+    public StepCount newMeasure(TimestampedValueGroup valueGroup) {
+
+        DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_VALUE_KEY));
+        double stepsPerMin = valueGroup.getValue(STEPS_PER_MINUTE_VALUE_KEY);
 
         double stepCount = stepsPerMin * duration.getValue().doubleValue() / 60.0;
 
         return new StepCount.Builder(stepCount)
-                .setEffectiveTimeFrame(ofStartDateTimeAndDuration(measureGroup.getEffectiveDateTime(), duration))
+                .setEffectiveTimeFrame(ofStartDateTimeAndDuration(valueGroup.getTimestamp(), duration))
                 .build();
     }
 }

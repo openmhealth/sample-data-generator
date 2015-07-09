@@ -17,13 +17,19 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 
 
 /**
+ * A service that generates timestamped value groups.
+ *
  * @author Emerson Farrugia
  */
-public interface MeasureGenerationService {
+public interface TimestampedValueGroupGenerationService {
 
-    Iterable<MeasureGroup> generateMeasureGroups(MeasureGenerationRequest request);
+    /**
+     * @param request a request to generate measures
+     * @return a list of timestamped value groups from which measures can be built
+     */
+    Iterable<TimestampedValueGroup> generateValueGroups(MeasureGenerationRequest request);
 }

@@ -1,11 +1,123 @@
-data:
-  header:
-    user-id: some-user
-    #acquisition-provenance:
-    #  source-name: generator
-
+# whether to write data points to the "console" or to a "file", defaults to "console"
+output-destination: console
+# the file to write the data points to, if the destination is "file"
 output-filename: some-filename.json
 
+data:
+  header:
+
+    # the user to associate the data points with
+    user-id: some-user
+    acquisition-provenance:
+
+      # the name of the source of the data points, defaults to "generator"
+      source-name: generator
+
+  # data is generated according to these default values unless overridden in the measures
+  # the earliest date time of the measures to generate, defaults to January 1st, 2014 at noon UTC
+  start-date-time: 2014-01-01T12:00:00Z
+
+  # the latest date time of the measures to generate, defaults to January 1st, 2015 at noon UTC
+  end-date-time: 2015-01-01T12:00:00Z
+
+  # the mean duration between the effective time frames of consecutive measures, defaults to 24 hours
+  mean-inter-point-duration: PT24h
+
+  # true if measures having effective time frames at night should be suppressed, defaults to false
+  suppress-night-time-measures: false
+
+  measure-generation-requests:
+  # a list of measure generation requests, with the following structure
+  #
+  # - generator: body-weight             # the name of the measure generator to use, as defined by the generator
+  #   value-trends:                      # a map of value keys and trend definitions
+  #     ? weight-in-kg                   # a value key, as defined by the generator
+  #     : start-date-time: ...           # overrides for the defaults listed above
+  #       end-date-time: ...
+  #       mean-inter-point-duration: ...
+  #       suppress-night-time-measures: ...
+  #       start-value: 55                # the value the trend starts with
+  #       end-value: 60                  # the value the trend ends with
+  #       variable:                      # the settings for the Gaussian random variable
+  #         standard-deviation: 0.1      # the standard deviation of the variable
+  #         minimum-value: 50            # an optional lower bound on the variable values
+  #         maximum-value: 65            # an optional upper bound on the variable values
+  #
+  # see the documentation for more information
+
+  - generator: blood-pressure
+    value-trends:
+      ? systolic-blood-pressure
+      : start-value: 110
+        end-value: 125
+        variable:
+          standard-deviation: 3
+          minimum-value: 100
+          maximum-value: 140
+      ? diastolic-blood-pressure
+      : start-value: 70
+        end-value: 80
+        variable:
+          standard-deviation: 3
+          minimum-value: 60
+          maximum-value: 90
+
+  - generator: body-weight
+    value-trends:
+      ? weight-in-kg
+      : start-value: 55
+        end-value: 60
+        variable:
+          standard-deviation: 0.1
+          minimum-value: 50
+          maximum-value: 65
+
+  - generator: step-count
+    value-trends:
+      ? duration-in-seconds
+      : start-value: 120
+        end-value: 120
+        variable:
+          standard-deviation: 100
+          minimum-value: 10
+          maximum-value: 1800
+      ? steps-per-minute
+      : start-value: 90
+        end-value: 90
+        variable:
+          standard-deviation: 15
+          minimum-value: 30
+          maximum-value: 125
+
+  - generator: physical-activity
+    value-trends:
+      ? duration-in-seconds
+      : start-value: 1800
+        end-value: 1800
+        variable:
+          standard-deviation: 600
+          minimum-value: 300
+          maximum-value: 2400
+      ? distance-in-meters
+      : start-value: 5000
+        end-value: 5000
+        variable:
+          standard-deviation: 1000
+          minimum-value: 500
+          maximum-value: 20000
+
+  - generator: heart-rate
+    value-trends:
+      ? rate-in-bpm
+      : start-value: 80
+        end-value: 80
+        variable:
+          standard-deviation: 10
+          minimum-value: 60
+          maximum-value: 200
+
+
+# internal configuration past this point
 spring:
   main:
     show-banner: false

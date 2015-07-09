@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openmhealth.schema.domain.omh.DataPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -31,6 +33,8 @@ import java.io.IOException;
  * @author Emerson Farrugia
  */
 @Service
+@Primary
+@ConditionalOnExpression("'${outputDestination}' == 'file'")
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
     @Value("${output-filename}")

@@ -16,15 +16,36 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 import org.openmhealth.schema.domain.omh.DataPoint;
 import org.openmhealth.schema.domain.omh.Measure;
+
+import java.util.Set;
 
 
 /**
  * @author Emerson Farrugia
  */
-public interface DataPointGenerationService<T extends Measure> {
+public interface DataPointGenerator<T extends Measure> {
 
-    Iterable<DataPoint<T>> generateDataPoints(Iterable<MeasureGroup> measureGroups);
+    /**
+     * @return the name of this generator
+     */
+    String getName();
+
+    /**
+     * @return the set of value keys required by this generator
+     */
+    Set<String> getRequiredValueKeys();
+
+    /**
+     * @return the set of value keys supported by this generator
+     */
+    Set<String> getSupportedValueKeys();
+
+    /**
+     * @param valueGroups a list of value groups, where each value group corresponds to a data point
+     * @return the list of generated data points
+     */
+    Iterable<DataPoint<T>> generateDataPoints(Iterable<TimestampedValueGroup> valueGroups);
 }

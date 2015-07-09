@@ -17,9 +17,9 @@
 package org.openmhealth.data.generator.service;
 
 import org.apache.commons.math3.distribution.ExponentialDistribution;
+import org.openmhealth.data.generator.domain.BoundedRandomVariableTrend;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
-import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -35,24 +35,25 @@ import static java.time.temporal.ChronoUnit.SECONDS;
  * @author Emerson Farrugia
  */
 @Service
-public class MeasureGenerationServiceImpl implements MeasureGenerationService {
+public class TimestampedValueGroupGenerationServiceImpl implements TimestampedValueGroupGenerationService {
 
     public static final int NIGHT_TIME_START_HOUR = 23;
     public static final int NIGHT_TIME_END_HOUR = 5;
 
-    @Override
-    public Iterable<MeasureGroup> generateMeasureGroups(MeasureGenerationRequest request) {
 
-        ExponentialDistribution distribution =
+    @Override
+    public Iterable<TimestampedValueGroup> generateValueGroups(MeasureGenerationRequest request) {
+
+        ExponentialDistribution interPointDurationDistribution =
                 new ExponentialDistribution(request.getMeanInterPointDuration().getSeconds());
 
         long totalDurationInS = Duration.between(request.getStartDateTime(), request.getEndDateTime()).getSeconds();
 
         OffsetDateTime effectiveDateTime = request.getStartDateTime();
-        List<MeasureGroup> measureGroups = new ArrayList<>();
+        List<TimestampedValueGroup> timestampedValueGroups = new ArrayList<>();
 
         do {
-            effectiveDateTime = effectiveDateTime.plus((long) distribution.sample(), SECONDS);
+            effectiveDateTime = effectiveDateTime.plus((long) interPointDurationDistribution.sample(), SECONDS);
 
             if (!effectiveDateTime.isBefore(request.getEndDateTime())) {
                 break;
@@ -64,25 +65,25 @@ public class MeasureGenerationServiceImpl implements MeasureGenerationService {
                 continue;
             }
 
-            MeasureGroup measureGroup = new MeasureGroup();
-            measureGroup.setEffectiveDateTime(effectiveDateTime);
+            TimestampedValueGroup valueGroup = new TimestampedValueGroup();
+            valueGroup.setTimestamp(effectiveDateTime);
 
             double trendProgressFraction = (double)
                     Duration.between(request.getStartDateTime(), effectiveDateTime).getSeconds() / totalDurationInS;
 
-            for (Map.Entry<String, RealValueRandomVariableTrend> trendEntry : request.getMeasureValueTrends()
-                    .entrySet()) {
+            for (Map.Entry<String, BoundedRandomVariableTrend> trendEntry : request.getValueTrends().entrySet()) {
 
-                String measure = trendEntry.getKey();
-                RealValueRandomVariableTrend trend = trendEntry.getValue();
+                String key = trendEntry.getKey();
+                BoundedRandomVariableTrend trend = trendEntry.getValue();
 
-                measureGroup.setMeasureValue(measure, trend.nextValue(trendProgressFraction));
+                double value = trend.nextValue(trendProgressFraction);
+                valueGroup.setValue(key, value);
             }
 
-            measureGroups.add(measureGroup);
+            timestampedValueGroups.add(valueGroup);
         }
         while (true);
 
-        return measureGroups;
+        return timestampedValueGroups;
     }
 }

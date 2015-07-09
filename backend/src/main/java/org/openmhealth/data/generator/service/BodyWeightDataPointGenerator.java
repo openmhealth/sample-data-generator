@@ -16,25 +16,45 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 import org.openmhealth.schema.domain.omh.BodyWeight;
 import org.openmhealth.schema.domain.omh.MassUnitValue;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
+import static java.util.Collections.singleton;
 import static org.openmhealth.schema.domain.omh.MassUnit.KILOGRAM;
 
 
 /**
  * @author Emerson Farrugia
  */
-@Service
-public class BodyWeightDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<BodyWeight> {
+@Component
+public class BodyWeightDataPointGenerator extends AbstractDataPointGeneratorImpl<BodyWeight> {
+
+    public static final String WEIGHT_VALUE_KEY = "weight-in-kg";
 
     @Override
-    public BodyWeight newMeasure(MeasureGroup measureGroup) {
+    public String getName() {
+        return "body-weight";
+    }
 
-        return new BodyWeight.Builder(new MassUnitValue(KILOGRAM, measureGroup.getMeasureValue("weight")))
-                .setEffectiveTimeFrame(measureGroup.getEffectiveDateTime())
+    @Override
+    public Set<String> getRequiredValueKeys() {
+        return singleton(WEIGHT_VALUE_KEY);
+    }
+
+    @Override
+    public Set<String> getSupportedValueKeys() {
+        return singleton(WEIGHT_VALUE_KEY);
+    }
+
+    @Override
+    public BodyWeight newMeasure(TimestampedValueGroup valueGroup) {
+
+        return new BodyWeight.Builder(new MassUnitValue(KILOGRAM, valueGroup.getValue(WEIGHT_VALUE_KEY)))
+                .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }
 }

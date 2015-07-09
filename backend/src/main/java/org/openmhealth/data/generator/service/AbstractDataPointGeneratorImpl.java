@@ -16,7 +16,7 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 import org.openmhealth.schema.domain.omh.DataPoint;
 import org.openmhealth.schema.domain.omh.DataPointAcquisitionProvenance;
 import org.openmhealth.schema.domain.omh.DataPointHeader;
@@ -34,8 +34,8 @@ import static org.openmhealth.schema.domain.omh.DataPointModality.SENSED;
 /**
  * @author Emerson Farrugia
  */
-public abstract class AbstractDataPointGenerationServiceImpl<T extends Measure>
-        implements DataPointGenerationService<T> {
+public abstract class AbstractDataPointGeneratorImpl<T extends Measure>
+        implements DataPointGenerator<T> {
 
     @Value("${data.header.user-id}")
     private String userId;
@@ -45,26 +45,26 @@ public abstract class AbstractDataPointGenerationServiceImpl<T extends Measure>
 
 
     @Override
-    public Iterable<DataPoint<T>> generateDataPoints(Iterable<MeasureGroup> measureGroups) {
+    public Iterable<DataPoint<T>> generateDataPoints(Iterable<TimestampedValueGroup> valueGroups) {
 
         List<DataPoint<T>> dataPoints = new ArrayList<>();
 
-        for (MeasureGroup measureGroup : measureGroups) {
-            dataPoints.add(newDataPoint(newMeasure(measureGroup)));
+        for (TimestampedValueGroup timestampedValueGroup : valueGroups) {
+            dataPoints.add(newDataPoint(newMeasure(timestampedValueGroup)));
         }
 
         return dataPoints;
     }
 
     /**
-     * @param measureGroup a measure group
-     * @return a measure corresponding to the specified measure group
+     * @param valueGroup a group of values
+     * @return a measure corresponding to the specified values
      */
-    public abstract T newMeasure(MeasureGroup measureGroup);
+    public abstract T newMeasure(TimestampedValueGroup valueGroup);
 
     /**
      * @param measure a measure
-     * @return a data point corresponding to the specified measure, using sane header values
+     * @return a data point corresponding to the specified measure
      */
     public DataPoint<T> newDataPoint(T measure) {
 
