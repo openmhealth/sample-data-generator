@@ -34,7 +34,7 @@ import java.io.IOException;
  */
 @Service
 @Primary
-@ConditionalOnExpression("'${outputDestination}' == 'file'")
+@ConditionalOnExpression("'${output-destination}' == 'file'")
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
     @Value("${output-filename}")
