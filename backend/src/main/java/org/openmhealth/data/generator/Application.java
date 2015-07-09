@@ -101,7 +101,7 @@ public class Application {
             Iterable<TimestampedValueGroup> valueGroups = valueGroupGenerationService.generateValueGroups(request);
             DataPointGenerator<?> dataPointGenerator = dataPointGeneratorMap.get(request.getGeneratorName());
 
-            Iterables.concat(dataPoints, dataPointGenerator.generateDataPoints(valueGroups));
+            dataPoints = Iterables.concat(dataPoints, dataPointGenerator.generateDataPoints(valueGroups));
         }
 
         long written = dataPointWritingService.writeDataPoints(dataPoints);
