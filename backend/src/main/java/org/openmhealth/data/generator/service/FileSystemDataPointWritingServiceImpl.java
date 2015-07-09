@@ -39,8 +39,11 @@ public class FileSystemDataPointWritingServiceImpl implements DataPointWritingSe
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Override
-    public void writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
+    public long writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
+
+        long written = 0;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
 
@@ -51,7 +54,10 @@ public class FileSystemDataPointWritingServiceImpl implements DataPointWritingSe
                 String valueAsString = objectMapper.writeValueAsString(dataPoint);
                 writer.write(valueAsString);
                 writer.write("\n");
+                written++;
             }
         }
+
+        return written;
     }
 }
