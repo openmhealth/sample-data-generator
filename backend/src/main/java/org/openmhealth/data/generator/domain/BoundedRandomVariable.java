@@ -31,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Emerson Farrugia
  */
+// TODO refactor this into a container object that wraps a variable and a trend
 public class BoundedRandomVariable {
 
     private static final Random prng = new SecureRandom();

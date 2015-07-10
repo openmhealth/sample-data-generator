@@ -28,9 +28,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Emerson Farrugia
  */
+// TODO refactor this into a container object that wraps a variable and a trend, allowing different variables and
+// trend types (linear, polynomial, spline, etc.) with multiple sample points instead of just start and end
 public class BoundedRandomVariableTrend {
 
-    private BoundedRandomVariable variable;
+    private BoundedRandomVariable variable = new BoundedRandomVariable();
     private Double startValue;
     private Double endValue;
 
@@ -108,6 +110,19 @@ public class BoundedRandomVariableTrend {
 
         Double mean = interpolate(fraction);
         return variable.nextValue(mean);
+    }
+
+    // TODO remove these setters on a refactor, currently needed by SnakeYaml to support flat structure
+    public void setStandardDeviation(Double standardDeviation) {
+        variable.setStandardDeviation(standardDeviation);
+    }
+
+    public void setMinimumValue(Double minimumValue) {
+        variable.setMinimumValue(minimumValue);
+    }
+
+    public void setMaximumValue(Double maximumValue) {
+        variable.setMaximumValue(maximumValue);
     }
 
     @Override

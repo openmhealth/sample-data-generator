@@ -35,103 +35,93 @@ data:
   # a list of measure generation requests, with the following structure
   #
   # - generator: body-weight             # the name of the measure generator to use, as defined by the generator
-  #   value-trends:                      # a map of value keys and trend definitions
-  #     ? weight-in-kg                   # a value key, as defined by the generator
-  #     : start-date-time: ...           # overrides for the defaults listed above
+  #   trends:                            # a map of trends and trend definitions
+  #     ? weight-in-kg                   # a trend key, as defined by the generator
+  #     : start-date-time: ...           # override for the defaults listed above
   #       end-date-time: ...
   #       mean-inter-point-duration: ...
   #       suppress-night-time-measures: ...
   #       start-value: 55                # the value the trend starts with
   #       end-value: 60                  # the value the trend ends with
-  #       variable:                      # the settings for the Gaussian random variable
-  #         standard-deviation: 0.1      # the standard deviation of the variable
-  #         minimum-value: 50            # an optional lower bound on the variable values
-  #         maximum-value: 65            # an optional upper bound on the variable values
+  #       minimum-value: 50              # a lower bound on the value, default none
+  #       maximum-value: 65              # an upper bound on the value, default none
+  #       standard-deviation: 0.1        # the standard deviation of the value from the interpolated mean, default 0
   #
-  # see the documentation for more information
+  # see the documentation at https://github.com/openmhealth/sample-data-generator for more information
 
   - generator: blood-pressure
-    value-trends:
+    trends:
       ? systolic-blood-pressure
       : start-value: 110
         end-value: 125
-        variable:
-          standard-deviation: 3
-          minimum-value: 100
-          maximum-value: 140
+        minimum-value: 100
+        maximum-value: 140
+        standard-deviation: 3
       ? diastolic-blood-pressure
       : start-value: 70
         end-value: 80
-        variable:
-          standard-deviation: 3
-          minimum-value: 60
-          maximum-value: 90
+        minimum-value: 60
+        maximum-value: 90
+        standard-deviation: 3
 
   - generator: body-weight
-    value-trends:
+    trends:
       ? weight-in-kg
       : start-value: 55
         end-value: 60
-        variable:
-          standard-deviation: 0.1
-          minimum-value: 50
-          maximum-value: 65
+        minimum-value: 50
+        maximum-value: 65
+        standard-deviation: 0.1
 
   - generator: step-count
     mean-inter-point-duration: PT60m
     suppress-night-time-measures: true
-    value-trends:
+    trends:
       ? duration-in-seconds
       : start-value: 300
         end-value: 150
-        variable:
-          standard-deviation: 50
-          minimum-value: 10
-          maximum-value: 1800
+        minimum-value: 10
+        maximum-value: 1800
+        standard-deviation: 50
       ? steps-per-minute
       : start-value: 90
         end-value: 90
-        variable:
-          standard-deviation: 15
-          minimum-value: 30
-          maximum-value: 125
+        minimum-value: 30
+        maximum-value: 125
+        standard-deviation: 15
 
   - generator: physical-activity
-    value-trends:
+    trends:
       ? duration-in-seconds
       : start-value: 1800
         end-value: 1800
-        variable:
-          standard-deviation: 600
-          minimum-value: 300
-          maximum-value: 2400
+        minimum-value: 300
+        maximum-value: 2400
+        standard-deviation: 600
       ? distance-in-meters
       : start-value: 5000
         end-value: 5000
-        variable:
-          standard-deviation: 1000
-          minimum-value: 500
-          maximum-value: 20000
+        minimum-value: 500
+        maximum-value: 20000
+        standard-deviation: 1000
 
   - generator: heart-rate
-    value-trends:
+    trends:
       ? rate-in-bpm
       : start-value: 80
         end-value: 80
-        variable:
-          standard-deviation: 10
-          minimum-value: 60
-          maximum-value: 200
+        minimum-value: 60
+        maximum-value: 200
+        standard-deviation: 10
 
   - generator: minutes-moderate-activity
-    value-trends:
+    trends:
       ? minutes
       : start-value: 30
         end-value: 30
-        variable:
-          standard-deviation: 20
-          minimum-value: 5
-          maximum-value: 120
+        minimum-value: 5
+        maximum-value: 120
+        standard-deviation: 20
 
 # internal configuration past this point
 spring:
