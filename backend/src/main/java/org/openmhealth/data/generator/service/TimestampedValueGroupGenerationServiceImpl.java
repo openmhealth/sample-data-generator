@@ -38,7 +38,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 public class TimestampedValueGroupGenerationServiceImpl implements TimestampedValueGroupGenerationService {
 
     public static final int NIGHT_TIME_START_HOUR = 23;
-    public static final int NIGHT_TIME_END_HOUR = 5;
+    public static final int NIGHT_TIME_END_HOUR = 6;
 
 
     @Override
@@ -60,8 +60,8 @@ public class TimestampedValueGroupGenerationServiceImpl implements TimestampedVa
             }
 
             if (request.isSuppressNightTimeMeasures() &&
-                    (effectiveDateTime.getHour() < NIGHT_TIME_END_HOUR ||
-                            effectiveDateTime.getHour() > NIGHT_TIME_START_HOUR)) {
+                    (effectiveDateTime.getHour() >= NIGHT_TIME_START_HOUR ||
+                            effectiveDateTime.getHour() < NIGHT_TIME_END_HOUR)) {
                 continue;
             }
 

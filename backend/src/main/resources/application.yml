@@ -24,10 +24,11 @@ data:
   end-date-time: 2015-01-01T12:00:00Z
 
   # the mean duration between the effective time frames of consecutive measures, defaults to 24 hours
+  # this is specified in ISO8601 duration format, see https://www.ietf.org/rfc/rfc3339.txt page 12
   mean-inter-point-duration: PT24h
 
   # true if measures having effective time frames at night should be suppressed, defaults to false
-  # TODO document night time
+  # a measure is considered to occur at night its effective time frame is after 23:00 or before 6:00
   suppress-night-time-measures: false
 
   measure-generation-requests:
