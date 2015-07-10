@@ -71,7 +71,7 @@ public class TimestampedValueGroupGenerationServiceImpl implements TimestampedVa
             double trendProgressFraction = (double)
                     Duration.between(request.getStartDateTime(), effectiveDateTime).getSeconds() / totalDurationInS;
 
-            for (Map.Entry<String, BoundedRandomVariableTrend> trendEntry : request.getValueTrends().entrySet()) {
+            for (Map.Entry<String, BoundedRandomVariableTrend> trendEntry : request.getTrends().entrySet()) {
 
                 String key = trendEntry.getKey();
                 BoundedRandomVariableTrend trend = trendEntry.getValue();

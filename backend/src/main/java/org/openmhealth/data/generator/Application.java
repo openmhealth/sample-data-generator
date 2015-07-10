@@ -163,7 +163,7 @@ public class Application {
 
             DataPointGenerator<?> generator = dataPointGeneratorMap.get(request.getGeneratorName());
 
-            Set<String> specifiedTrendKeys = request.getValueTrends().keySet();
+            Set<String> specifiedTrendKeys = request.getTrends().keySet();
             Set<String> requiredTrendKeys = generator.getRequiredValueGroupKeys();
 
             if (!specifiedTrendKeys.containsAll(requiredTrendKeys)) {

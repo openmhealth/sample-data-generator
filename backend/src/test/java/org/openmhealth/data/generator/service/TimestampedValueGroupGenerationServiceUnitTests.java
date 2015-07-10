@@ -56,7 +56,7 @@ public class TimestampedValueGroupGenerationServiceUnitTests {
         request.setStartDateTime(startDateTime);
         request.setEndDateTime(endDateTime);
         request.setMeanInterPointDuration(Duration.ofHours(6));
-        request.addValueTrend(trendKey, randomVariableTrend);
+        request.addTrend(trendKey, randomVariableTrend);
 
         Iterable<TimestampedValueGroup> valueGroups;
 

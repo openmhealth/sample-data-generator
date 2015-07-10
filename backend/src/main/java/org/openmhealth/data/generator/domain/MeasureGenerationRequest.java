@@ -36,7 +36,7 @@ public class MeasureGenerationRequest {
     private OffsetDateTime endDateTime;
     private Duration meanInterPointDuration;
     private Boolean suppressNightTimeMeasures;
-    private Map<String, BoundedRandomVariableTrend> valueTrends = new HashMap<>();
+    private Map<String, BoundedRandomVariableTrend> trends = new HashMap<>();
 
     /**
      * @return the name of the measure generator to use
@@ -108,20 +108,20 @@ public class MeasureGenerationRequest {
     }
 
     /**
-     * @return a map of trends to be generated, with one key per value trend
+     * @return a map of trends to be generated
      */
     @Valid
     @NotNull
-    public Map<String, BoundedRandomVariableTrend> getValueTrends() {
-        return valueTrends;
+    public Map<String, BoundedRandomVariableTrend> getTrends() {
+        return trends;
     }
 
-    public void setValueTrends(Map<String, BoundedRandomVariableTrend> valueTrends) {
-        this.valueTrends = valueTrends;
+    public void setTrends(Map<String, BoundedRandomVariableTrend> trends) {
+        this.trends = trends;
     }
 
-    public void addValueTrend(String key, BoundedRandomVariableTrend trend) {
-        this.valueTrends.put(key, trend);
+    public void addTrend(String key, BoundedRandomVariableTrend trend) {
+        this.trends.put(key, trend);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class MeasureGenerationRequest {
         sb.append(", endDateTime=").append(endDateTime);
         sb.append(", meanInterPointDuration=").append(meanInterPointDuration);
         sb.append(", suppressNightTimeMeasures=").append(suppressNightTimeMeasures);
-        sb.append(", valueTrends=").append(valueTrends);
+        sb.append(", trends=").append(trends);
         sb.append('}');
 
         return sb.toString();
