@@ -116,6 +116,15 @@ data:
           minimum-value: 60
           maximum-value: 200
 
+  - generator: minutes-moderate-activity
+    value-trends:
+      ? minutes
+      : start-value: 30
+        end-value: 30
+        variable:
+          standard-deviation: 20
+          minimum-value: 5
+          maximum-value: 120
 
 # internal configuration past this point
 spring:
