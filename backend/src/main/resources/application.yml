@@ -1,19 +1,22 @@
-# whether to write data points to the "console" or to a "file", defaults to "console"
-output-destination: console
-# the file to write the data points to, if the destination is "file"
-output-filename: some-filename.json
+output:
+  # whether to write data points to the "console" or to a "file", defaults to "console"
+  destination: file
+  file:
+    # the file to write the data points to
+    filename: some-filename.json
+    # true if the file should be appended to, false if it should be overwritten, defaults to true
+    append: true
 
 data:
   header:
-
     # the user to associate the data points with
     user-id: some-user
-    acquisition-provenance:
 
+    acquisition-provenance:
       # the name of the source of the data points, defaults to "generator"
       source-name: generator
 
-  # data is generated according to these default values unless overridden in the measures
+  # data is generated according to these optional default values unless overridden in the measures
   # the earliest date time of the measures to generate, defaults to January 1st, 2014 at noon UTC
   start-date-time: 2014-01-01T12:00:00Z
 
@@ -24,6 +27,7 @@ data:
   mean-inter-point-duration: PT24h
 
   # true if measures having effective time frames at night should be suppressed, defaults to false
+  # TODO document night time
   suppress-night-time-measures: false
 
   measure-generation-requests:

@@ -24,9 +24,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 /**
@@ -34,22 +37,32 @@ import java.io.IOException;
  */
 @Service
 @Primary
-@ConditionalOnExpression("'${output-destination}' == 'file'")
+@ConditionalOnExpression("'${output.destination}' == 'file'")
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
-    @Value("${output-filename}")
+    @Value("${output.file.filename}")
     private String filename;
+
+    @Value("${output.file.append:true}")
+    private Boolean append;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    @PostConstruct
+    public void clearFile() throws IOException {
+
+        if (!append) {
+            Files.deleteIfExists(Paths.get(filename));
+        }
+    }
 
     @Override
     public long writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
 
         long written = 0;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
 
             for (DataPoint dataPoint : dataPoints) {
                 // this simplifies direct imports into MongoDB
