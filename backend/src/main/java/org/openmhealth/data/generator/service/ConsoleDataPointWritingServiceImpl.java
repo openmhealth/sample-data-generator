@@ -35,7 +35,7 @@ public class ConsoleDataPointWritingServiceImpl implements DataPointWritingServi
 
 
     @Override
-    public long writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
+    public long writeDataPoints(Iterable<? extends DataPoint<?>> dataPoints) throws IOException {
 
         long written = 0;
 

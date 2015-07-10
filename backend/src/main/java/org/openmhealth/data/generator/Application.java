@@ -17,7 +17,6 @@
 package org.openmhealth.data.generator;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.openmhealth.data.generator.configuration.DataGenerationSettings;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
@@ -94,19 +93,22 @@ public class Application {
             return;
         }
 
-        Iterable<DataPoint> dataPoints = Collections.emptyList();
+        long totalWritten = 0;
 
         for (MeasureGenerationRequest request : dataGenerationSettings.getMeasureGenerationRequests()) {
 
             Iterable<TimestampedValueGroup> valueGroups = valueGroupGenerationService.generateValueGroups(request);
             DataPointGenerator<?> dataPointGenerator = dataPointGeneratorMap.get(request.getGeneratorName());
 
-            dataPoints = Iterables.concat(dataPoints, dataPointGenerator.generateDataPoints(valueGroups));
+            Iterable<? extends DataPoint<?>> dataPoints = dataPointGenerator.generateDataPoints(valueGroups);
+
+            long written = dataPointWritingService.writeDataPoints(dataPoints);
+            totalWritten += written;
+
+            log.info("The '{}' generator has written {} data point(s).", dataPointGenerator.getName(), written);
         }
 
-        long written = dataPointWritingService.writeDataPoints(dataPoints);
-
-        log.info("A total of {} data point(s) have been written.", written);
+        log.info("A total of {} data point(s) have been written.", totalWritten);
     }
 
 

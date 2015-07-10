@@ -29,5 +29,5 @@ public interface DataPointWritingService {
      * @return the number of data points that have been written
      * @throws Exception if an error occurred while writing data points
      */
-    long writeDataPoints(Iterable<DataPoint> dataPoints) throws Exception;
+    long writeDataPoints(Iterable<? extends DataPoint<?>> dataPoints) throws Exception;
 }
