@@ -17,12 +17,10 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.TimestampedValueGroup;
-import org.openmhealth.schema.domain.omh.DataPoint;
-import org.openmhealth.schema.domain.omh.DataPointAcquisitionProvenance;
-import org.openmhealth.schema.domain.omh.DataPointHeader;
-import org.openmhealth.schema.domain.omh.Measure;
+import org.openmhealth.schema.domain.omh.*;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,15 +66,46 @@ public abstract class AbstractDataPointGeneratorImpl<T extends Measure>
      */
     public DataPoint<T> newDataPoint(T measure) {
 
-        DataPointAcquisitionProvenance acquisitionProvenance = new DataPointAcquisitionProvenance.Builder(sourceName)
-                .setModality(SENSED)
-                .setSourceCreationDateTime(now().minusMinutes(5))
-                .build();
+        OffsetDateTime creationDateTime = null;
+        TimeInterval effectiveTimeInterval = measure.getEffectiveTimeFrame().getTimeInterval();
 
-        DataPointHeader header = new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(), now())
-                .setAcquisitionProvenance(acquisitionProvenance)
-                .setUserId(userId)
-                .build();
+        if (effectiveTimeInterval != null) {
+            // set the creation date time to the end of the effective time interval
+            if (effectiveTimeInterval.getEndDateTime() != null) {
+                creationDateTime = effectiveTimeInterval.getEndDateTime();
+            }
+            else {
+                if (effectiveTimeInterval.getDuration() != null) {
+                    if (effectiveTimeInterval.getDuration().getTypedUnit() == DurationUnit.SECOND) {
+                        creationDateTime = effectiveTimeInterval.getStartDateTime()
+                                .plusSeconds(effectiveTimeInterval.getDuration().getValue().longValue());
+                    }
+                    else if (effectiveTimeInterval.getDuration().getTypedUnit() == DurationUnit.MINUTE) {
+                        creationDateTime = effectiveTimeInterval.getStartDateTime()
+                                .plusMinutes(effectiveTimeInterval.getDuration().getValue().longValue());
+                    }
+                    else {
+                        throw new IllegalStateException("A creation date time can't be determined.");
+                    }
+                }
+            }
+        }
+        else {
+            // set the creation date time to the effective date time
+            creationDateTime = measure.getEffectiveTimeFrame().getDateTime();
+        }
+
+        DataPointAcquisitionProvenance acquisitionProvenance =
+                new DataPointAcquisitionProvenance.Builder(sourceName)
+                        .setModality(SENSED)
+                        .setSourceCreationDateTime(now().minusMinutes(5))
+                        .build();
+
+        DataPointHeader header =
+                new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(), creationDateTime)
+                        .setAcquisitionProvenance(acquisitionProvenance)
+                        .setUserId(userId)
+                        .build();
 
         return new DataPoint<>(header, measure);
     }
