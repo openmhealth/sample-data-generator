@@ -73,12 +73,14 @@ data:
           maximum-value: 65
 
   - generator: step-count
+    mean-inter-point-duration: PT60m
+    suppress-night-time-measures: true
     value-trends:
       ? duration-in-seconds
-      : start-value: 120
-        end-value: 120
+      : start-value: 300
+        end-value: 150
         variable:
-          standard-deviation: 100
+          standard-deviation: 50
           minimum-value: 10
           maximum-value: 1800
       ? steps-per-minute
