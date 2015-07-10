@@ -1,6 +1,6 @@
 output:
   # whether to write data points to the "console" or to a "file", defaults to "console"
-  destination: file
+  destination: console
   file:
     # the file to write the data points to
     filename: some-filename.json
@@ -48,80 +48,81 @@ data:
   #       standard-deviation: 0.1        # the standard deviation of the value from the interpolated mean, default 0
   #
   # see the documentation at https://github.com/openmhealth/sample-data-generator for more information
+  # by default, no data is generated; uncomment and modify the following configuration as needed
 
-  - generator: blood-pressure
-    trends:
-      ? systolic-blood-pressure
-      : start-value: 110
-        end-value: 125
-        minimum-value: 100
-        maximum-value: 140
-        standard-deviation: 3
-      ? diastolic-blood-pressure
-      : start-value: 70
-        end-value: 80
-        minimum-value: 60
-        maximum-value: 90
-        standard-deviation: 3
-
-  - generator: body-weight
-    trends:
-      ? weight-in-kg
-      : start-value: 55
-        end-value: 60
-        minimum-value: 50
-        maximum-value: 65
-        standard-deviation: 0.1
-
-  - generator: step-count
-    mean-inter-point-duration: PT60m
-    suppress-night-time-measures: true
-    trends:
-      ? duration-in-seconds
-      : start-value: 300
-        end-value: 150
-        minimum-value: 10
-        maximum-value: 1800
-        standard-deviation: 50
-      ? steps-per-minute
-      : start-value: 90
-        end-value: 90
-        minimum-value: 30
-        maximum-value: 125
-        standard-deviation: 15
-
-  - generator: physical-activity
-    trends:
-      ? duration-in-seconds
-      : start-value: 1800
-        end-value: 1800
-        minimum-value: 300
-        maximum-value: 2400
-        standard-deviation: 600
-      ? distance-in-meters
-      : start-value: 5000
-        end-value: 5000
-        minimum-value: 500
-        maximum-value: 20000
-        standard-deviation: 1000
-
-  - generator: heart-rate
-    trends:
-      ? rate-in-bpm
-      : start-value: 80
-        end-value: 80
-        minimum-value: 60
-        maximum-value: 200
-        standard-deviation: 10
-
-  - generator: minutes-moderate-activity
-    trends:
-      ? minutes
-      : start-value: 30
-        end-value: 30
-        minimum-value: 5
-        maximum-value: 120
-        standard-deviation: 20
+#  - generator: blood-pressure
+#    trends:
+#      ? systolic-blood-pressure
+#      : start-value: 110
+#        end-value: 125
+#        minimum-value: 100
+#        maximum-value: 140
+#        standard-deviation: 3
+#      ? diastolic-blood-pressure
+#      : start-value: 70
+#        end-value: 80
+#        minimum-value: 60
+#        maximum-value: 90
+#        standard-deviation: 3
+#
+#  - generator: body-weight
+#    trends:
+#      ? weight-in-kg
+#      : start-value: 55
+#        end-value: 60
+#        minimum-value: 50
+#        maximum-value: 65
+#        standard-deviation: 0.1
+#
+#  - generator: step-count
+#    mean-inter-point-duration: PT60m
+#    suppress-night-time-measures: true
+#    trends:
+#      ? duration-in-seconds
+#      : start-value: 300
+#        end-value: 150
+#        minimum-value: 10
+#        maximum-value: 1800
+#        standard-deviation: 50
+#      ? steps-per-minute
+#      : start-value: 90
+#        end-value: 90
+#        minimum-value: 30
+#        maximum-value: 125
+#        standard-deviation: 15
+#
+#  - generator: physical-activity
+#    trends:
+#      ? duration-in-seconds
+#      : start-value: 1800
+#        end-value: 1800
+#        minimum-value: 300
+#        maximum-value: 2400
+#        standard-deviation: 600
+#      ? distance-in-meters
+#      : start-value: 5000
+#        end-value: 5000
+#        minimum-value: 500
+#        maximum-value: 20000
+#        standard-deviation: 1000
+#
+#  - generator: heart-rate
+#    trends:
+#      ? rate-in-bpm
+#      : start-value: 80
+#        end-value: 80
+#        minimum-value: 60
+#        maximum-value: 200
+#        standard-deviation: 10
+#
+#  - generator: minutes-moderate-activity
+#    trends:
+#      ? minutes
+#      : start-value: 30
+#        end-value: 30
+#        minimum-value: 5
+#        maximum-value: 120
+#        standard-deviation: 20
 
 # internal configuration past this point
 spring:

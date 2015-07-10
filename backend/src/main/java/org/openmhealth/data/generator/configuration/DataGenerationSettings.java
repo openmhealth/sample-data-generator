@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public class DataGenerationSettings {
     private OffsetDateTime endDateTime = OffsetDateTime.of(2015, 1, 1, 12, 0, 0, 0, ZoneOffset.UTC);
     private Duration meanInterPointDuration = Duration.ofHours(24);
     private Boolean suppressNightTimeMeasures = false;
-    private List<MeasureGenerationRequest> measureGenerationRequests;
+    private List<MeasureGenerationRequest> measureGenerationRequests = new ArrayList<>();
 
     public OffsetDateTime getStartDateTime() {
         return startDateTime;

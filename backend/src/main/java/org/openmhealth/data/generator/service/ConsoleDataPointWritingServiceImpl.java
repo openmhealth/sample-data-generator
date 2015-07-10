@@ -40,7 +40,10 @@ public class ConsoleDataPointWritingServiceImpl implements DataPointWritingServi
         long written = 0;
 
         for (DataPoint dataPoint : dataPoints) {
-            objectMapper.writeValue(System.out, dataPoint);
+            // trying to use objectMapper.writeValue(System.out) closes the output stream, so doing it this way instead
+            String dataPointAsString = objectMapper.writeValueAsString(dataPoint);
+
+            System.out.println(dataPointAsString);
             written++;
         }
 
