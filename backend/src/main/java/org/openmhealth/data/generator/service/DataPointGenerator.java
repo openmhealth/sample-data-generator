@@ -34,14 +34,14 @@ public interface DataPointGenerator<T extends Measure> {
     String getName();
 
     /**
-     * @return the set of value keys required by this generator
+     * @return the set of value group keys required by this generator
      */
-    Set<String> getRequiredValueKeys();
+    Set<String> getRequiredValueGroupKeys();
 
     /**
-     * @return the set of value keys supported by this generator
+     * @return the set of value group keys supported by this generator
      */
-    Set<String> getSupportedValueKeys();
+    Set<String> getSupportedValueGroupKeys();
 
     /**
      * @param valueGroups a list of value groups, where each value group corresponds to a data point

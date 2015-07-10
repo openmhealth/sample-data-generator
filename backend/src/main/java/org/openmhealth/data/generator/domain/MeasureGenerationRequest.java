@@ -120,8 +120,8 @@ public class MeasureGenerationRequest {
         this.valueTrends = valueTrends;
     }
 
-    public void addValueTrend(String valueKey, BoundedRandomVariableTrend trend) {
-        this.valueTrends.put(valueKey, trend);
+    public void addValueTrend(String key, BoundedRandomVariableTrend trend) {
+        this.valueTrends.put(key, trend);
     }
 
     @Override

@@ -34,8 +34,8 @@ import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndD
 @Service
 public class StepCountDataPointGenerator extends AbstractDataPointGeneratorImpl<StepCount> {
 
-    public static final String STEPS_PER_MINUTE_VALUE_KEY = "steps-per-minute";
-    public static final String DURATION_VALUE_KEY = "duration-in-seconds";
+    public static final String STEPS_PER_MINUTE_KEY = "steps-per-minute";
+    public static final String DURATION_KEY = "duration-in-seconds";
 
     @Override
     public String getName() {
@@ -43,20 +43,20 @@ public class StepCountDataPointGenerator extends AbstractDataPointGeneratorImpl<
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return Sets.newHashSet(DURATION_VALUE_KEY, STEPS_PER_MINUTE_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return Sets.newHashSet(DURATION_KEY, STEPS_PER_MINUTE_KEY);
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return Sets.newHashSet(DURATION_VALUE_KEY, STEPS_PER_MINUTE_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return Sets.newHashSet(DURATION_KEY, STEPS_PER_MINUTE_KEY);
     }
 
     @Override
     public StepCount newMeasure(TimestampedValueGroup valueGroup) {
 
-        DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_VALUE_KEY));
-        double stepsPerMin = valueGroup.getValue(STEPS_PER_MINUTE_VALUE_KEY);
+        DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_KEY));
+        double stepsPerMin = valueGroup.getValue(STEPS_PER_MINUTE_KEY);
 
         double stepCount = stepsPerMin * duration.getValue().doubleValue() / 60.0;
 

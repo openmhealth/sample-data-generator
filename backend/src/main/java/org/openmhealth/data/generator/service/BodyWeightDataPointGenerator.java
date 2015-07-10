@@ -33,7 +33,7 @@ import static org.openmhealth.schema.domain.omh.MassUnit.KILOGRAM;
 @Component
 public class BodyWeightDataPointGenerator extends AbstractDataPointGeneratorImpl<BodyWeight> {
 
-    public static final String WEIGHT_VALUE_KEY = "weight-in-kg";
+    public static final String WEIGHT_KEY = "weight-in-kg";
 
     @Override
     public String getName() {
@@ -41,19 +41,19 @@ public class BodyWeightDataPointGenerator extends AbstractDataPointGeneratorImpl
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return singleton(WEIGHT_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return singleton(WEIGHT_KEY);
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return singleton(WEIGHT_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return singleton(WEIGHT_KEY);
     }
 
     @Override
     public BodyWeight newMeasure(TimestampedValueGroup valueGroup) {
 
-        return new BodyWeight.Builder(new MassUnitValue(KILOGRAM, valueGroup.getValue(WEIGHT_VALUE_KEY)))
+        return new BodyWeight.Builder(new MassUnitValue(KILOGRAM, valueGroup.getValue(WEIGHT_KEY)))
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }

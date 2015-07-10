@@ -35,8 +35,8 @@ import static org.openmhealth.schema.domain.omh.BloodPressureUnit.MM_OF_MERCURY;
 public class BloodPressureDataPointGenerator
         extends AbstractDataPointGeneratorImpl<BloodPressure> {
 
-    public static final String SYSTOLIC_VALUE_KEY = "systolic-blood-pressure";
-    public static final String DIASTOLIC_VALUE_KEY = "diastolic-blood-pressure";
+    public static final String SYSTOLIC_KEY = "systolic-blood-pressure";
+    public static final String DIASTOLIC_KEY = "diastolic-blood-pressure";
 
     @Override
     public String getName() {
@@ -44,21 +44,21 @@ public class BloodPressureDataPointGenerator
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return Sets.newHashSet(SYSTOLIC_VALUE_KEY, DIASTOLIC_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return Sets.newHashSet(SYSTOLIC_KEY, DIASTOLIC_KEY);
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return Sets.newHashSet(SYSTOLIC_VALUE_KEY, DIASTOLIC_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return Sets.newHashSet(SYSTOLIC_KEY, DIASTOLIC_KEY);
     }
 
     @Override
     public BloodPressure newMeasure(TimestampedValueGroup valueGroup) {
 
         return new BloodPressure.Builder(
-                new SystolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(SYSTOLIC_VALUE_KEY)),
-                new DiastolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(DIASTOLIC_VALUE_KEY)))
+                new SystolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(SYSTOLIC_KEY)),
+                new DiastolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(DIASTOLIC_KEY)))
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }

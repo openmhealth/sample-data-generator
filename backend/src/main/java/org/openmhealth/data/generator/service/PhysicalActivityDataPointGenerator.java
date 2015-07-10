@@ -37,8 +37,8 @@ import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndD
 public class PhysicalActivityDataPointGenerator
         extends AbstractDataPointGeneratorImpl<PhysicalActivity> {
 
-    public static final String DURATION_VALUE_KEY = "duration-in-seconds";
-    public static final String DISTANCE_VALUE_KEY = "distance-in-meters";
+    public static final String DURATION_KEY = "duration-in-seconds";
+    public static final String DISTANCE_KEY = "distance-in-meters";
 
     @Override
     public String getName() {
@@ -46,25 +46,25 @@ public class PhysicalActivityDataPointGenerator
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return Sets.newHashSet(DURATION_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return Sets.newHashSet(DURATION_KEY);
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return Sets.newHashSet(DURATION_VALUE_KEY, DISTANCE_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return Sets.newHashSet(DURATION_KEY, DISTANCE_KEY);
     }
 
     @Override
     public PhysicalActivity newMeasure(TimestampedValueGroup valueGroup) {
 
-        DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_VALUE_KEY));
+        DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_KEY));
 
         PhysicalActivity.Builder builder = new PhysicalActivity.Builder("some activity")
                 .setEffectiveTimeFrame(ofStartDateTimeAndDuration(valueGroup.getTimestamp(), duration));
 
-        if (valueGroup.getValue(DISTANCE_VALUE_KEY) != null) {
-            builder.setDistance(new LengthUnitValue(METER, valueGroup.getValue(DISTANCE_VALUE_KEY)));
+        if (valueGroup.getValue(DISTANCE_KEY) != null) {
+            builder.setDistance(new LengthUnitValue(METER, valueGroup.getValue(DISTANCE_KEY)));
         }
 
         return builder.build();

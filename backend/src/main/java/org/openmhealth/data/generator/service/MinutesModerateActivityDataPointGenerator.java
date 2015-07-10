@@ -35,7 +35,7 @@ import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndD
 public class MinutesModerateActivityDataPointGenerator
         extends AbstractDataPointGeneratorImpl<MinutesModerateActivity> {
 
-    public static final String MINUTES_VALUE_KEY = "minutes";
+    public static final String MINUTES_KEY = "minutes";
 
     @Override
     public String getName() {
@@ -43,19 +43,19 @@ public class MinutesModerateActivityDataPointGenerator
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return Sets.newHashSet(MINUTES_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return Sets.newHashSet(MINUTES_KEY);
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return Sets.newHashSet(MINUTES_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return Sets.newHashSet(MINUTES_KEY);
     }
 
     @Override
     public MinutesModerateActivity newMeasure(TimestampedValueGroup valueGroup) {
 
-        DurationUnitValue duration = new DurationUnitValue(MINUTE, valueGroup.getValue(MINUTES_VALUE_KEY));
+        DurationUnitValue duration = new DurationUnitValue(MINUTE, valueGroup.getValue(MINUTES_KEY));
 
         MinutesModerateActivity.Builder builder = new MinutesModerateActivity.Builder(duration)
                 .setEffectiveTimeFrame(ofStartDateTimeAndDuration(valueGroup.getTimestamp(), duration));

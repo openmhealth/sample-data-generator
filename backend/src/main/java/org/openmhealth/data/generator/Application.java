@@ -163,23 +163,23 @@ public class Application {
 
             DataPointGenerator<?> generator = dataPointGeneratorMap.get(request.getGeneratorName());
 
-            Set<String> specifiedValueKeys = request.getValueTrends().keySet();
-            Set<String> requiredValueKeys = generator.getRequiredValueKeys();
+            Set<String> specifiedTrendKeys = request.getValueTrends().keySet();
+            Set<String> requiredTrendKeys = generator.getRequiredValueGroupKeys();
 
-            if (!specifiedValueKeys.containsAll(requiredValueKeys)) {
-                log.error("Request {} for generator '{}' is missing required value keys.", i, generator.getName());
+            if (!specifiedTrendKeys.containsAll(requiredTrendKeys)) {
+                log.error("Request {} for generator '{}' is missing required trend keys.", i, generator.getName());
                 log.error("The generator requires the following missing keys: {}.",
-                        joiner.join(Sets.difference(requiredValueKeys, specifiedValueKeys)));
+                        joiner.join(Sets.difference(requiredTrendKeys, specifiedTrendKeys)));
                 return false;
             }
 
-            Set<String> supportedValueKeys = generator.getSupportedValueKeys();
+            Set<String> supportedTrendKeys = generator.getSupportedValueGroupKeys();
 
-            if (!supportedValueKeys.containsAll(specifiedValueKeys)) {
-                log.warn("Request {} for generator '{}' specifies unsupported value keys.", i, generator.getName());
-                log.warn("The generator supports the following keys: {}.", joiner.join(supportedValueKeys));
+            if (!supportedTrendKeys.containsAll(specifiedTrendKeys)) {
+                log.warn("Request {} for generator '{}' specifies unsupported trend keys.", i, generator.getName());
+                log.warn("The generator supports the following keys: {}.", joiner.join(supportedTrendKeys));
                 log.warn("The following keys are being ignored: {}.",
-                        joiner.join(Sets.difference(specifiedValueKeys, supportedValueKeys)));
+                        joiner.join(Sets.difference(specifiedTrendKeys, supportedTrendKeys)));
             }
         }
 

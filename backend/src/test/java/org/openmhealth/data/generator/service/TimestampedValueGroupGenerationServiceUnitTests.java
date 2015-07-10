@@ -42,7 +42,7 @@ public class TimestampedValueGroupGenerationServiceUnitTests {
     @Test
     public void generateValueGroupsShouldWork() {
 
-        String valueKey = "foo";
+        String trendKey = "foo";
         double minimumValue = 50d;
         double maximumValue = 90d;
 
@@ -56,7 +56,7 @@ public class TimestampedValueGroupGenerationServiceUnitTests {
         request.setStartDateTime(startDateTime);
         request.setEndDateTime(endDateTime);
         request.setMeanInterPointDuration(Duration.ofHours(6));
-        request.addValueTrend(valueKey, randomVariableTrend);
+        request.addValueTrend(trendKey, randomVariableTrend);
 
         Iterable<TimestampedValueGroup> valueGroups;
 
@@ -67,8 +67,8 @@ public class TimestampedValueGroupGenerationServiceUnitTests {
 
         for (TimestampedValueGroup valueGroup : valueGroups) {
 
-            assertThat(valueGroup.getValue(valueKey), greaterThanOrEqualTo(minimumValue));
-            assertThat(valueGroup.getValue(valueKey), lessThanOrEqualTo(maximumValue));
+            assertThat(valueGroup.getValue(trendKey), greaterThanOrEqualTo(minimumValue));
+            assertThat(valueGroup.getValue(trendKey), lessThanOrEqualTo(maximumValue));
 
             long effectiveDateTime = valueGroup.getTimestamp().toEpochSecond();
             assertThat(effectiveDateTime, greaterThanOrEqualTo(startDateTime.toEpochSecond()));

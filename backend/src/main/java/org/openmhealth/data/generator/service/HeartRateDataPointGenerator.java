@@ -31,7 +31,7 @@ import static java.util.Collections.singleton;
 @Component
 public class HeartRateDataPointGenerator extends AbstractDataPointGeneratorImpl<HeartRate> {
 
-    public static final String RATE_VALUE_KEY = "rate-in-bpm";
+    public static final String RATE_KEY = "rate-in-bpm";
 
     @Override
     public String getName() {
@@ -39,19 +39,19 @@ public class HeartRateDataPointGenerator extends AbstractDataPointGeneratorImpl<
     }
 
     @Override
-    public Set<String> getRequiredValueKeys() {
-        return singleton(RATE_VALUE_KEY);
+    public Set<String> getRequiredValueGroupKeys() {
+        return singleton(RATE_KEY);
     }
 
     @Override
-    public Set<String> getSupportedValueKeys() {
-        return singleton(RATE_VALUE_KEY);
+    public Set<String> getSupportedValueGroupKeys() {
+        return singleton(RATE_KEY);
     }
 
     @Override
     public HeartRate newMeasure(TimestampedValueGroup valueGroup) {
 
-        return new HeartRate.Builder(valueGroup.getValue(RATE_VALUE_KEY))
+        return new HeartRate.Builder(valueGroup.getValue(RATE_KEY))
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }
