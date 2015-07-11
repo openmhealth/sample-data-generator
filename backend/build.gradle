@@ -81,3 +81,13 @@ dependencies {
     runtime "org.hibernate:hibernate-validator"
     runtime "javax.el:javax.el-api:3.0.0"
 }
+
+task copyArchiveJarToDockerContext(dependsOn: assemble, type: Copy) {
+    from 'build/libs'
+    into 'docker'
+    include "${jar.archiveName}"
+    rename { String fileName ->
+        fileName.replace("${jar.archiveName}", "${jar.baseName}.jar")
+    }
+}
+build.dependsOn copyArchiveJarToDockerContext
