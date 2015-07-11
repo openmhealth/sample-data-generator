@@ -40,7 +40,7 @@ import java.nio.file.Paths;
 @ConditionalOnExpression("'${output.destination}' == 'file'")
 public class FileSystemDataPointWritingServiceImpl implements DataPointWritingService {
 
-    @Value("${output.file.filename}")
+    @Value("${output.file.filename:output.json}")
     private String filename;
 
     @Value("${output.file.append:true}")
