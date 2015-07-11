@@ -35,7 +35,7 @@ import static org.openmhealth.schema.domain.omh.DataPointModality.SENSED;
 public abstract class AbstractDataPointGeneratorImpl<T extends Measure>
         implements DataPointGenerator<T> {
 
-    @Value("${data.header.user-id}")
+    @Value("${data.header.user-id:some-user}")
     private String userId;
 
     @Value("${data.header.acquisition-provenance.source-name:generator}")

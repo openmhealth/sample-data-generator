@@ -9,7 +9,7 @@ output:
 
 data:
   header:
-    # the user to associate the data points with
+    # the user to associate the data points with, defaults to "some-user"
     user-id: some-user
 
     acquisition-provenance:

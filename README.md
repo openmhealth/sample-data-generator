@@ -5,7 +5,7 @@ one containing data matching the data types, time scales, and trends they're int
  of those people generate the specific data sets they need.
  
 The data generator is a command-line tool that creates Open mHealth [data points](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point) 
-for a number of measures. It reads a [configuration file](#configuration) to understand what data it should create, and writes that data
+for different kinds of measures. It reads a [configuration file](#configuration) to understand what data it should create, and writes that data
 out to the console or to a file. 
 
 ### Requirements
@@ -16,28 +16,27 @@ out to the console or to a file.
  
 ### Installation
 
-To install the generator using Docker, download the data generator image by running
-
-- `docker pull openmhealth/omh-sample-data-generator:latest`
-
+To install the generator using Docker, download the data generator image by running `docker pull openmhealth/omh-sample-data-generator:latest`.
 This will download around 500 MB of Docker images, most of which is the [OpenJDK 8 JRE](https://registry.hub.docker.com/_/java/).
 
-If you don't want to use Docker, download the `data-generator-x.y.z.jar` JAR file from the [latest release](https://github.com/openmhealth/sample-data-generator/releases) on GitHub.  
-
+Alternatively, if you don't want to use Docker, download the `data-generator-x.y.z.jar` JAR file from 
+the [latest release](https://github.com/openmhealth/sample-data-generator/releases) on GitHub. You'll need a Java JRE to run it.
 
 ### Configuration 
 
-To configure the data generator, you modify a configuration file called `application.yml`. If you haven't yet created
-a configuration file, the quickest way to get started is to copy the
-default configuration file from [here](backend/src/main/resources/application.yml).
+To configure the data generator, you'll modify a configuration file called `application.yml`. If you haven't created
+a configuration file yet, the quickest way to get started is to copy the
+default configuration file from [here](backend/src/main/resources/application.yml) (it might be easier to copy if you
+click the 'Raw' button on that page.)
 
-The configuration file is written in [YAML](https://en.wikipedia.org/wiki/YAML) and is split into three main sections
+The generator configuration file is written in [YAML](https://en.wikipedia.org/wiki/YAML) and is split into three main
+sections
 
-- [output settings](#output_settings), which control what the generator does with the data points it creates 
-- [header settings](#header_settings), which set certain header fields in the generated data points  
-- [measure generation settings](#measure_generation_settings), which specify what data to generate 
+- an [output settings](#output_settings) section, which controls what the generator does with the data points it creates 
+- a [header settings](#header_settings) section, which sets certain header fields in the generated data points  
+- a [measure generation settings](#measure_generation_settings) section, which specifies the data to generate 
 
-A simple configuration file with comments showing what the pieces mean might looks like this
+A simple commented configuration file might looks like this
 
 ```yaml
 # output settings
@@ -67,15 +66,17 @@ data:
         end-value: 60
 ```
 
-The following paragraphs explain what each group of settings does. You can also  
-Th default configuration file is heavily documented, showing you what each line does and what the generator defaults
-to if a setting is missing. You can dive in and read the details there, but we recommend you read the following sections
- first.
+This example is significantly shorter than the default configuration file because defaults are being used. In general, 
+if any key in the default configuration file has a "defaults to" comment, that key can be omitted, and the generator will
+set the value of that key to the stated default.
+
+The following paragraphs explain what each group of settings does. The default configuration file is also heavily
+documented, but we recommend you first read the following sections before diving in.
 
 #### Output settings
 
-The output settings control what the generator does with the data points it creates. The complete settings are as
-follows
+The `output` key controls what the generator does with the data points it creates. The complete
+settings are as follows
 
 ```yaml
 output:
@@ -88,22 +89,23 @@ output:
     append: true
 ```
 
-The `file` section is ignored if the destination is set to `console`.
+The `file` key is ignored if the destination is set to `console`.
 
-The data points are written one per line, with no separators. When writing to a file, this makes it easy to add 
-custom separators, or to import the file into a MongoDB collection using the command
+The generator writes one data point per line, with no separators. When writing to a file, this format makes it easy
+to add import the file into a MongoDB collection using the command
 
 - `mongoimport -d some_database -c some_collection --file some-filename.json`
 
+
 #### Data point header settings
 
-The data point header settings give you a way to tune some of the operational data in the data points. The complete 
+The `data.header` key gives you a way to tune some of the operational data in the data points. The complete 
 settings are as follows
 
 ```yaml
 data:
   header:
-    # the user to associate the data points with
+    # the user to associate the data points with, defaults to "some-user"
     user-id: some-user
 
     acquisition-provenance:
