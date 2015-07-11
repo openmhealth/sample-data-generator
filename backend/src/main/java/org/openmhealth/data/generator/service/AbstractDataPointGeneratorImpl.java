@@ -24,7 +24,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.OffsetDateTime.now;
 import static java.util.UUID.randomUUID;
 import static org.openmhealth.schema.domain.omh.DataPointModality.SENSED;
 
@@ -98,11 +97,12 @@ public abstract class AbstractDataPointGeneratorImpl<T extends Measure>
         DataPointAcquisitionProvenance acquisitionProvenance =
                 new DataPointAcquisitionProvenance.Builder(sourceName)
                         .setModality(SENSED)
-                        .setSourceCreationDateTime(now().minusMinutes(5))
+                        .setSourceCreationDateTime(creationDateTime)
                         .build();
 
         DataPointHeader header =
-                new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(), creationDateTime)
+                new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(),
+                        creationDateTime.plusMinutes(1))
                         .setAcquisitionProvenance(acquisitionProvenance)
                         .setUserId(userId)
                         .build();
