@@ -2,8 +2,8 @@ output:
   # whether to write data points to the "console" or to a "file", defaults to "console"
   destination: console
   file:
-    # the file to write the data points to
-    filename: some-filename.json
+    # the file to write the data points to, defaults to "output.json"
+    filename: output.json
     # true if the file should be appended to, false if it should be overwritten, defaults to true
     append: true
 
@@ -31,7 +31,6 @@ data:
   # a measure is considered to occur at night its effective time frame is after 23:00 or before 6:00
   suppress-night-time-measures: false
 
-  measure-generation-requests:
   # a list of measure generation requests, with the following structure
   #
   # - generator: body-weight             # the name of the measure generator to use, as defined by the generator
@@ -50,6 +49,7 @@ data:
   # see the documentation at https://github.com/openmhealth/sample-data-generator for more information
   # by default, no data is generated; uncomment and modify the following configuration as needed
 
+#  measure-generation-requests:
 #  - generator: blood-pressure
 #    trends:
 #      ? systolic-blood-pressure
