@@ -49,7 +49,7 @@ run `java -jar data-generator-x.y.z.jar`.
 In either case, you should see output that looks something like
 
 ```
-Starting Application on frost with PID 15861 (/Users/emerson/crap/backend.jar started by emerson in /Users/emerson/crap)
+Starting Application on machine with PID 15861 (/Users/foo/backend.jar started by foo in /Users/foo)
 Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@6e8d6976: startup date [Sat Jul 11 16:09:24 CEST 2015]; root of context hierarchy
 Registering beans for JMX exposure on startup
 Started Application in 2.056 seconds (JVM running for 2.998)
@@ -202,7 +202,50 @@ between generators by name. Each measure generator defines the trends it needs, 
  generator uses a trend called `weight-in-kg`. The data generator will warn you if you use unrecognized keys, or fail
  to provide required keys. 
 
-When executed, this configuration produces the following result:
+When executed, this configuration generates about 240 data points (60 days times 4 data points per day), where a
+ data point looks like this:
+ 
+```json
+{
+    "header": {
+        "id": "423c4b46-15ac-438b-9734-f8556cb94b6a",
+        "creation_date_time": "2015-01-01T15:34:25Z",
+        "acquisition_provenance": {
+            "source_name": "generator",
+            "source_creation_date_time": "2015-01-01T15:33:25Z",
+            "modality": "sensed"
+        },
+        "user_id": "some-user",
+        "schema_id": {
+            "namespace": "omh",
+            "name": "body-weight",
+            "version": "1.0"
+        }
+    },
+    "body": {
+        "effective_time_frame": {
+            "date_time": "2015-01-01T15:33:25Z"
+        },
+        "body_weight": {
+            "unit": "kg",
+            "value": 60.01255983207784
+        }
+    },
+    "id": "423c4b46-15ac-438b-9734-f8556cb94b6a"
+}
+```
+
+A graph of the generated data looks like this:
+
+TODO
+
+> This graph was generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
+We are in the process of releasing this code to help you create similar visualizations, and will update this message
+ when we do.
+
+ 
+ 
+
 
 
 
