@@ -237,7 +237,7 @@ When executed, this configuration generates about 240 data points (60 days times
 
 A graph of the generated data looks like this:
 
-TODO
+![Basic body weight trend](/../gh-pages/pages/images/basic-weight-trend.png?raw=true "Basic weight trend")
 
 > This graph was generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
 We are in the process of releasing this code to help you create similar visualizations, and will update this message
