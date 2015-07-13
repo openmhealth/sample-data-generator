@@ -44,10 +44,10 @@ There's a big section below on the configuration file, but first let's make sure
 To run the generator using Docker, and assuming you're in the same directory as the `application.yaml` configuration
 file, run
 
-`docker run --rm -v ``pwd``:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest`
+`docker run --rm -v \`pwd\`:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest`
  
-in a terminal. If you're not in the same directory as the configuration file, replace ``pwd`` with the location 
-of the configuration file.
+in a terminal. If you're not in the same directory as the configuration file, replace `\`pwd\`` with the directory 
+the configuration file is in.
 
 Alternatively, to run the generator natively, navigate to the directory that contains the configuration file and 
 run
