@@ -45,7 +45,7 @@ ext {
 }
 
 group = "org.openmhealth.generator"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
