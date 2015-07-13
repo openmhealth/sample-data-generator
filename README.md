@@ -63,7 +63,10 @@ to create some data.
 
 ### Configuration, take two
 
-The generator configuration file is written in YAML, and has keys that divide it into three sections
+The generator configuration file is written in YAML. If you're new to YAML, just keep in mind that indentation
+matters and to use spaces, not tabs. 
+
+The configuration file has keys that divide it into three sections
 
 - an [output settings](#output_settings) section, which controls what the generator does with the data points it creates 
 - a [header settings](#header_settings) section, which sets certain header fields in the generated data points  
@@ -171,6 +174,8 @@ A measure generator needs at least one value to generate a measure. For example,
 the generator needs a mass value. You may also want the generator to use different values in the different instances it
 creates. This is achieved using *trends*.
 
+##### Trends
+
 A trend represents the changing of a value over time. The trend has a *start timestamp* and *start value*, and an *end
 timestamp* and *end value*. Using linear interpolation, a generator can compute the value at any time between
 the start time and the end time. For example, if the start timestamp is midnight January 1st, 2015 with a weight of 60kg
@@ -237,7 +242,7 @@ When executed, this configuration generates about 240 data points (60 days times
 
 A graph of the generated data looks like this:
 
-![Body weight no variance](resources/images/body-weight-no-variance.png?raw=true "Basic weight trend")
+![Body weight no variance](resources/images/body-weight-no-variance.png?raw=true "Weight trend")
 
 > These graphs are generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
 We are in the process of releasing this code to help you create similar visualizations, and will update this message
@@ -245,14 +250,15 @@ We are in the process of releasing this code to help you create similar visualiz
 
 A closer view of a few days in January looks like this:
 
-![Body weight no variance zoomed](resources/images/body-weight-no-variance-zoomed.png?raw=true "Basic weight trend zoomed")
-
+![Body weight no variance (zoomed)](resources/images/body-weight-no-variance-zoomed.png?raw=true "Weight trend (zoomed)")
 
 There are a couple of things to note from this graph. The first is that the data points aren't evenly spaced in time. This is 
 caused by the configured inter-point duration being a *mean*. Some points will naturally be nearer each other and some farther
 apart as the exponential distribution is sampled to come up with effective time frames. This variability is typically desired as
 it more closely represents real world data. The second thing to note is that there's no variability off the trend itself,
 i.e. the weights follow the trend perfectly, which is not representative of real world data.
+
+##### Standard deviation
 
 To add variability to the values, you can specify 
 a *standard deviation* when configuring a trend. Once the generator interpolates a value at a specific point in time,
@@ -271,17 +277,68 @@ measure-generation-requests:
     ? weight-in-kg
     : start-value: 60
       end-value: 65
-      standard-deviation: 1
+      standard-deviation: 0.25
 ```          
 
 A graph of the generated data looks like this:
 
-![Body weight with variance](resources/images/body-weight-with-variance.png?raw=true "Basic weight trend with variance")
+![Body weight with variance](resources/images/body-weight-with-variance.png?raw=true "Weight trend with variance")
 
 And a closer view of a few days in January now looks like this:
 
-![Body weight with variance zoomed](resources/images/body-weight-with-variance-zoomed.png?raw=true "Basic weight trend with variance zoomed")
+![Body weight with variance (zoomed)](resources/images/body-weight-with-variance-zoomed.png?raw=true "Weight trend with variance (zoomed)")
 
+There are a couple of 
+
+###### Limits
+
+When using the `standard-deviation` key, some generated values will be far away from the trend, possibly so far away
+as to be undesirable or outright invalid, such as negative weights. To mitigate this, the configuration supports
+*minimum value* and *maximum value* keys. For example:
+
+```yaml
+measure-generation-requests:
+- generator: body-weight
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT6h
+  trends:
+    ? weight-in-kg
+    : start-value: 60
+      end-value: 65
+      standard-deviation: 0.25
+      minimum-value: 59
+      maximum-value: 66
+```          
+
+All generated values will fall within these bounds. 
+
+
+###### Night time measure suppression
+
+You may want to suppress the generation of measures that occur at night, typically when modelling self-reported data.
+The generator has a *suppress-night-time-measures* key that skips data points whose effective time frames
+ fall between 11pm and 5am. Our example configuration would look like
+   
+```yaml
+measure-generation-requests:
+- generator: body-weight
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT6h
+  suppress-night-time-measures: true
+  trends:
+    ? weight-in-kg
+    : start-value: 60
+      end-value: 65
+      standard-deviation: 0.25
+      minimum-value: 59
+      maximum-value: 66
+```
+           
+Our closer view of those few days in January now looks like this:
+
+![Body weight without night time measures](resources/images/body-weight-without-night-time-measures.png?raw=true "Weight trend without night time measures")
 
 
 
