@@ -206,7 +206,7 @@ in the data generator. It is possible to create different generators for the sam
 between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
  generator uses a trend called `weight-in-kg`. The data generator will warn you if you use unrecognized keys, or fail
  to provide required keys. The full list of included measure generators and their keys is available in
- Appendix A.
+ [Appendix A](#appendix-a-measure-generators).
 
 When executed, this configuration generates about 240 data points (60 days times 4 data points per day), where a
  data point looks like this:
@@ -472,14 +472,14 @@ The following table shows the currently included measure generators and their tr
  more information, take a look at the code or ask us a [question](https://github.com/openmhealth/sample-data-generator/issues).
 The default configuration file also includes a sample configuration for each measure generator. 
 
-|name|schema|supported keys|required keys|
-|-------------|---------|---------|-------------| 
-|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[blood pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-blood-pressure, diastolic-blood-pressure|same|
-|[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[body weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
-|[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)[heart rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
-|[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[minutes of moderate activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
-|[physical-activity](backend/src/main/java/org/openmhealth/data/generator/service/PhysicalActivityDataPointGenerator.java)|[physical activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)|duration-in-seconds, distance-in-meters|duration-in-seconds|
-|[step-count](backend/src/main/java/org/openmhealth/data/generator/service/StepCountDataPointGenerator.java)|[step count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)|steps-per-minute, duration-in-seconds|same|
+|name|Open mHealth measure schema|supported trend keys|required trend keys|
+|----|---------------------------|--------------------|-------------------| 
+|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-blood-pressure, diastolic-blood-pressure|same|
+|[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[omh:body-weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
+|[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
+|[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[omh:minutes-moderate-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
+|[physical-activity](backend/src/main/java/org/openmhealth/data/generator/service/PhysicalActivityDataPointGenerator.java)|[omh:physical-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)|duration-in-seconds, distance-in-meters|duration-in-seconds|
+|[step-count](backend/src/main/java/org/openmhealth/data/generator/service/StepCountDataPointGenerator.java)|[omh:step-count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)|steps-per-minute, duration-in-seconds|same|
 
     
 Measure generators are short and quite easy to write. Feel free to [contribute](#contributing) others.
