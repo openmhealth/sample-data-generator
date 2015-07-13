@@ -288,9 +288,7 @@ And a closer view of a few days in January now looks like this:
 
 ![Body weight with variance (zoomed)](resources/images/body-weight-with-variance-zoomed.png?raw=true "Weight trend with variance (zoomed)")
 
-There are a couple of 
-
-###### Limits
+##### Limits
 
 When using the `standard-deviation` key, some generated values will be far away from the trend, possibly so far away
 as to be undesirable or outright invalid, such as negative weights. To mitigate this, the configuration supports
@@ -313,8 +311,7 @@ measure-generation-requests:
 
 All generated values will fall within these bounds. 
 
-
-###### Night time measure suppression
+##### Night time measure suppression
 
 You may want to suppress the generation of measures that occur at night, typically when modelling self-reported data.
 The generator has a *suppress-night-time-measures* key that skips data points whose effective time frames
@@ -340,6 +337,131 @@ Our closer view of those few days in January now looks like this:
 
 ![Body weight without night time measures](resources/images/body-weight-without-night-time-measures.png?raw=true "Weight trend without night time measures")
 
+As you can see, the data points no longer have effective time frames at night.
+
+##### Multi-trend measures
+
+Some measure generators build measures by combining multiple trends. To define these trends, simply add more
+trend definitions to the `trends` key using the question-mark-colon notation. For example, to create blood pressure measures, 
+specify both `systolic-blood-pressure` and `diastolic-blood-pressure` trends to the `blood-pressure` generator as
+follows:
+
+```yaml
+measure-generation-requests:
+- generator: blood-pressure
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT12h
+  suppress-night-time-measures: true
+  trends:
+    ? systolic-blood-pressure
+    : start-value: 110
+      end-value: 125
+      minimum-value: 100
+      maximum-value: 140
+      standard-deviation: 3
+    ? diastolic-blood-pressure
+    : start-value: 70
+      end-value: 80
+      minimum-value: 60
+      maximum-value: 90
+      standard-deviation: 3
+```      
+
+A graph of the generated data looks like this:
+
+![Blood pressure](resources/images/blood-pressure-with-variance.png?raw=true "Blood pressure")
+
+##### Avoiding repetition
+
+A single configuration file can create different types of measures. Simply concatenate measure generation requests in
+the configuration file, and the data generator will generate all configured measures. For example:
+
+```yaml
+measure-generation-requests:
+- generator: blood-pressure
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT12h
+  suppress-night-time-measures: true
+  trends:
+    ? systolic-blood-pressure
+    : start-value: 110
+      end-value: 125
+      minimum-value: 100
+      maximum-value: 140
+      standard-deviation: 3
+    ? diastolic-blood-pressure
+    : start-value: 70
+      end-value: 80
+      minimum-value: 60
+      maximum-value: 90
+      standard-deviation: 3
+
+- generator: body-weight
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT6h
+  suppress-night-time-measures: true
+  trends:
+    ? weight-in-kg
+    : start-value: 55
+      end-value: 60
+      minimum-value: 50
+      maximum-value: 65
+      standard-deviation: 0.1
+```      
+ 
+In the above example, some measure generator settings are repeated. To avoid this repetition,
+you can also place common settings under the `data` key, and only override them per generator as necessary. The above
+settings would then look like this.
+
+```yaml                    
+data:
+  start-date-time: 2015-01-01T12:00:00Z        # defaults to January 1st, 2014 at noon UTC
+  end-date-time: 2015-03-01T12:00:00Z          # defaults to January 1st, 2015 at noon UTC
+  suppress-night-time-measures: true           # defaults to false
+
+  measure-generation-requests:
+  - generator: blood-pressure
+    mean-inter-point-duration: PT12h           # defaults to PT24h
+    trends:
+      ? systolic-blood-pressure
+      : start-value: 110
+        end-value: 125
+        minimum-value: 100
+        maximum-value: 140
+        standard-deviation: 3
+      ? diastolic-blood-pressure
+      : start-value: 70
+        end-value: 80
+        minimum-value: 60
+        maximum-value: 90
+        standard-deviation: 3
+
+  - generator: body-weight
+    mean-inter-point-duration: PT6h
+    trends:
+      ? weight-in-kg
+      : start-value: 55
+        end-value: 60
+        minimum-value: 50
+        maximum-value: 65
+        standard-deviation: 0.1
+```
+
+If the generator settings are omitted, the defaults in the comments take effect.
 
 
+### Contributing
 
+To contribute to this repository
+
+1. Open an [issue](https://github.com/openmhealth/sample-data-generator/issues) to let us know what you're going to work on
+  1. This lets us give feedback early and put you in touch with people who can help
+2. Fork this repository
+3. Create your feature branch from the `develop` branch
+4. Commit and push your changes to your fork
+5. Create a pull request
+ 
+    
