@@ -1,4 +1,4 @@
-# Open mHealth Sample Data Generator
+# Open mHealth Sample Data Generator [![Build Status](https://travis-ci.org/openmhealth/sample-data-generator.svg?branch=master)](https://travis-ci.org/openmhealth/sample-data-generator)
 
 When people become familiar with [Open mHealth](http://www.openmhealth.org/), they often ask if there's a data set they can test against, especially 
 one containing data matching the data types, time scales, and trends they're interested in. This project is meant to help all
@@ -11,14 +11,17 @@ out to the console or to a file.
 ### Requirements
 
 - If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/) and nothing else.
-- If you want to run the generator natively instead, you'll need a Java JRE.
-- If you want to modify the code, you'll need a Java SDK.
+- If you want to run the generator natively instead, you'll need a Java 8 JRE.
+- If you want to modify the code, you'll need a Java 8 SDK.
  
 ### Installation
 
-To install the generator using Docker, download the data generator image by running `docker pull openmhealth/omh-sample-data-generator:latest` in
-a terminal. This will download around 500 MB of Docker images, most of which is the [OpenJDK 8 JRE](https://registry.hub.docker.com/_/java/).
+To install the generator using Docker, download the data generator image by running 
 
+`docker pull openmhealth/omh-sample-data-generator:latest`
+
+in
+a terminal. This will download around 500 MB of Docker images, most of which is the [OpenJDK 8 JRE](https://registry.hub.docker.com/_/java/). 
 Alternatively, if you don't want to use Docker, download the `data-generator-x.y.z.jar` JAR file from 
 the [latest release](https://github.com/openmhealth/sample-data-generator/releases) on GitHub. 
 You'll need a Java JRE to run it.
@@ -39,12 +42,17 @@ There's a big section below on the configuration file, but first let's make sure
 ### Running
 
 To run the generator using Docker, and assuming you're in the same directory as the `application.yaml` configuration
-file, run `docker run --rm -v ``pwd``:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest` 
+file, run
+
+`docker run --rm -v ``pwd``:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest`
+ 
 in a terminal. If you're not in the same directory as the configuration file, replace ``pwd`` with the location 
 of the configuration file.
 
-To run the generator natively, navigate to the directory that contains the configuration file in a terminal and 
-run `java -jar data-generator-x.y.z.jar`.  
+Alternatively, to run the generator natively, navigate to the directory that contains the configuration file and 
+run
+
+`java -jar data-generator-x.y.z.jar`  
 
 In either case, you should see output that looks something like
 
