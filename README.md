@@ -453,6 +453,8 @@ data:
 
 If the generator settings are omitted, the defaults in the comments take effect.
 
+You can add as many measure generator requests in a configuration file as you want, including
+requests for the same measure generator. This lets you assemble data sets that include more complex trends.
 
 ### Contributing
 
