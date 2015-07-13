@@ -237,14 +237,51 @@ When executed, this configuration generates about 240 data points (60 days times
 
 A graph of the generated data looks like this:
 
-![Basic body weight trend](/gh-pages/pages/images/basic-weight-trend.png?raw=true "Basic weight trend")
+![Body weight no variance](resources/images/body-weight-no-variance.png?raw=true "Basic weight trend")
 
-> This graph was generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
+> These graphs are generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
 We are in the process of releasing this code to help you create similar visualizations, and will update this message
  when we do.
 
- 
- 
+A closer view of a few days in January looks like this:
+
+![Body weight no variance zoomed](resources/images/body-weight-no-variance-zoomed.png?raw=true "Basic weight trend zoomed")
+
+
+There are a couple of things to note from this graph. The first is that the data points aren't evenly spaced in time. This is 
+caused by the configured inter-point duration being a *mean*. Some points will naturally be nearer each other and some farther
+apart as the exponential distribution is sampled to come up with effective time frames. This variability is typically desired as
+it more closely represents real world data. The second thing to note is that there's no variability off the trend itself,
+i.e. the weights follow the trend perfectly, which is not representative of real world data.
+
+To add variability to the values, you can specify 
+a *standard deviation* when configuring a trend. Once the generator interpolates a value at a specific point in time,
+it treats that value as the mean of a Gaussian distribution with the specified standard deviation. The random variable
+is then sampled to come up with the value to set.
+   
+If we add a standard deviation to our example configuration as follows:
+                     
+```yaml
+measure-generation-requests:
+- generator: body-weight
+  start-date-time: 2015-01-01T12:00:00Z
+  end-date-time: 2015-03-01T12:00:00Z
+  mean-inter-point-duration: PT6h
+  trends:
+    ? weight-in-kg
+    : start-value: 60
+      end-value: 65
+      standard-deviation: 1
+```          
+
+A graph of the generated data looks like this:
+
+![Body weight with variance](resources/images/body-weight-with-variance.png?raw=true "Basic weight trend with variance")
+
+And a closer view of a few days in January now looks like this:
+
+![Body weight with variance zoomed](resources/images/body-weight-with-variance-zoomed.png?raw=true "Basic weight trend with variance zoomed")
+
 
 
 
