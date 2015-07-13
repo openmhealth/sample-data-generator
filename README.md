@@ -205,7 +205,8 @@ In the example, the name of the measure generator is `body-weight`. This is defi
 in the data generator. It is possible to create different generators for the same measure, and you would differentiate 
 between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
  generator uses a trend called `weight-in-kg`. The data generator will warn you if you use unrecognized keys, or fail
- to provide required keys. 
+ to provide required keys. The full list of included measure generators and their keys is available in
+ Appendix A.
 
 When executed, this configuration generates about 240 data points (60 days times 4 data points per day), where a
  data point looks like this:
@@ -315,7 +316,7 @@ All generated values will fall within these bounds.
 
 You may want to suppress the generation of measures that occur at night, typically when modelling self-reported data.
 The generator has a *suppress-night-time-measures* key that skips data points whose effective time frames
- fall between 11pm and 5am. Our example configuration would look like
+ falls between 11pm and 5am. Our example configuration would look like
    
 ```yaml
 measure-generation-requests:
@@ -457,11 +458,28 @@ If the generator settings are omitted, the defaults in the comments take effect.
 
 To contribute to this repository
 
-1. Open an [issue](https://github.com/openmhealth/sample-data-generator/issues) to let us know what you're going to work on
-  1. This lets us give feedback early and put you in touch with people who can help
-2. Fork this repository
-3. Create your feature branch from the `develop` branch
-4. Commit and push your changes to your fork
-5. Create a pull request
+1. Open an [issue](https://github.com/openmhealth/sample-data-generator/issues) to let us know what you're going to work on.
+  1. This lets us give you feedback early and lets us put you in touch with people who can help.
+2. Fork this repository.
+3. Create your feature branch from the `develop` branch.
+4. Commit and push your changes to your fork.
+5. Create a pull request.
  
+ 
+### Appendix A. Measure generators
+
+The following table shows the currently included measure generators and their trend keys. For
+ more information, take a look at the code or ask us a [question](https://github.com/openmhealth/sample-data-generator/issues).
+The default configuration file also includes a sample configuration for each measure generator. 
+
+|name|schema|supported keys|required keys|
+|-------------|---------|---------|-------------| 
+|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[blood pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-blood-pressure, diastolic-blood-pressure|same|
+|[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[body weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
+|[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)[heart rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
+|[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[minutes of moderate activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
+|[physical-activity](backend/src/main/java/org/openmhealth/data/generator/service/PhysicalActivityDataPointGenerator.java)|[physical activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)|duration-in-seconds, distance-in-meters|duration-in-seconds|
+|[step-count](backend/src/main/java/org/openmhealth/data/generator/service/StepCountDataPointGenerator.java)|[step count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)|steps-per-minute, duration-in-seconds|same|
+
     
+Measure generators are short and quite easy to write. Feel free to [contribute](#contributing) others.
