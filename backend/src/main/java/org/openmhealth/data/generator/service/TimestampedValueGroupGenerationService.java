@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package org.openmhealth.data.generator.configuration;
+package org.openmhealth.data.generator.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
 
 
 /**
+ * A service that generates timestamped value groups.
+ *
  * @author Emerson Farrugia
  */
-@Configuration
-public class JacksonConfiguration {
+public interface TimestampedValueGroupGenerationService {
 
     /**
-     * @return an {@link ObjectMapper} that matches schema conventions
+     * @param request a request to generate measures
+     * @return a list of timestamped value groups from which measures can be built
      */
-    @Bean
-    public ObjectMapper objectMapper() {
-        return org.openmhealth.schema.configuration.JacksonConfiguration.newObjectMapper();
-    }
+    Iterable<TimestampedValueGroup> generateValueGroups(MeasureGenerationRequest request);
 }

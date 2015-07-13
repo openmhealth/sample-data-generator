@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2015 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,29 @@
  * limitations under the License.
  */
 
-package org.openmhealth.data.generator.configuration;
+package org.openmhealth.data.generator.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import java.time.OffsetDateTime;
 
 
 /**
+ * A converter that creates {@link OffsetDateTime} objects from strings.
+ *
  * @author Emerson Farrugia
  */
-@Configuration
-public class JacksonConfiguration {
+@Component
+public class StringToOffsetDateTimeConverter implements Converter<String, OffsetDateTime> {
 
-    /**
-     * @return an {@link ObjectMapper} that matches schema conventions
-     */
-    @Bean
-    public ObjectMapper objectMapper() {
-        return org.openmhealth.schema.configuration.JacksonConfiguration.newObjectMapper();
+    @Override
+    public OffsetDateTime convert(String source) {
+
+        if (source == null) {
+            return null;
+        }
+
+        return OffsetDateTime.parse(source);
     }
 }

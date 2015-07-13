@@ -16,9 +16,7 @@
 
 package org.openmhealth.data.generator.service;
 
-import org.openmhealth.schema.pojos.DataPoint;
-
-import java.io.IOException;
+import org.openmhealth.schema.domain.omh.DataPoint;
 
 
 /**
@@ -26,5 +24,10 @@ import java.io.IOException;
  */
 public interface DataPointWritingService {
 
-    void writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException;
+    /**
+     * @param dataPoints the data points to write
+     * @return the number of data points that have been written
+     * @throws Exception if an error occurred while writing data points
+     */
+    long writeDataPoints(Iterable<? extends DataPoint<?>> dataPoints) throws Exception;
 }

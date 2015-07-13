@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2015 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,19 @@
 
 package org.openmhealth.data.generator.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Configuration
-public class JacksonConfiguration {
+public class ValidationConfiguration {
 
-    /**
-     * @return an {@link ObjectMapper} that matches schema conventions
-     */
     @Bean
-    public ObjectMapper objectMapper() {
-        return org.openmhealth.schema.configuration.JacksonConfiguration.newObjectMapper();
+    public javax.validation.Validator localValidatorFactoryBean() {
+        return new LocalValidatorFactoryBean();
     }
 }
