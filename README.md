@@ -11,8 +11,8 @@ out to the console or to a file.
 ### Requirements
 
 - If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/) and nothing else.
-- If you want to run the generator natively instead, you'll need a Java JRE.
-- If you want to modify the code, you'll need a Java SDK.
+- If you want to run the generator natively instead, you'll need a Java 8 JRE.
+- If you want to modify the code, you'll need a Java 8 SDK.
  
 ### Installation
 
