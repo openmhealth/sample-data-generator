@@ -33,11 +33,20 @@ public class ConsoleDataPointWritingServiceImpl implements DataPointWritingServi
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Override
-    public void writeDataPoints(Iterable<DataPoint> dataPoints) throws IOException {
+    public long writeDataPoints(Iterable<? extends DataPoint<?>> dataPoints) throws IOException {
+
+        long written = 0;
 
         for (DataPoint dataPoint : dataPoints) {
-            objectMapper.writeValue(System.out, dataPoint);
+            // trying to use objectMapper.writeValue(System.out) closes the output stream, so doing it this way instead
+            String dataPointAsString = objectMapper.writeValueAsString(dataPoint);
+
+            System.out.println(dataPointAsString);
+            written++;
         }
+
+        return written;
     }
 }

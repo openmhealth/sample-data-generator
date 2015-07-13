@@ -16,35 +16,33 @@
 
 package org.openmhealth.data.generator;
 
-import com.google.common.collect.Iterables;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
+import org.openmhealth.data.generator.configuration.DataGenerationSettings;
 import org.openmhealth.data.generator.domain.MeasureGenerationRequest;
-import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.data.generator.domain.RealValueRandomVariable;
-import org.openmhealth.data.generator.domain.RealValueRandomVariableTrend;
-import org.openmhealth.data.generator.service.DataPointGenerationService;
+import org.openmhealth.data.generator.domain.TimestampedValueGroup;
+import org.openmhealth.data.generator.service.DataPointGenerator;
 import org.openmhealth.data.generator.service.DataPointWritingService;
-import org.openmhealth.data.generator.service.MeasureGenerationService;
-import org.openmhealth.schema.domain.omh.BloodPressure;
-import org.openmhealth.schema.domain.omh.BodyWeight;
+import org.openmhealth.data.generator.service.TimestampedValueGroupGenerationService;
 import org.openmhealth.schema.domain.omh.DataPoint;
-import org.openmhealth.schema.domain.omh.StepCount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.*;
 
 
 /**
+ * This application loads a data generation fixture from application.yml and creates data points according to that
+ * fixture. The data points are then either written to the console or to a file, as configured.
+ *
  * @author Emerson Farrugia
  */
 @SpringBootApplication
@@ -54,23 +52,24 @@ public class Application {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @Autowired
-    private MeasureGenerationService measureGenerationService;
+    private DataGenerationSettings dataGenerationSettings;
 
     @Autowired
-    private DataPointGenerationService<BloodPressure> bloodPressureDataPointGenerationService;
+    private Validator validator;
 
     @Autowired
-    private DataPointGenerationService<BodyWeight> bodyWeightDataPointGenerationService;
+    private List<DataPointGenerator> dataPointGenerators = new ArrayList<>();
 
     @Autowired
-    private DataPointGenerationService<StepCount> stepCountDataPointGenerationService;
+    private TimestampedValueGroupGenerationService valueGroupGenerationService;
 
     @Autowired
-    @Qualifier("consoleDataPointWritingServiceImpl")
-//    @Qualifier("fileSystemDataPointWritingServiceImpl")
     private DataPointWritingService dataPointWritingService;
 
-    public static void main(String[] args) throws IOException {
+    private Map<String, DataPointGenerator<?>> dataPointGeneratorMap = new HashMap<>();
+
+
+    public static void main(String[] args) throws Exception {
 
         ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class, args);
 
@@ -78,95 +77,112 @@ public class Application {
         application.run();
     }
 
-    public void run() throws IOException {
+    @PostConstruct
+    public void initializeDataPointGenerators() {
 
-        OffsetDateTime startDateTime = OffsetDateTime.now().minusDays(3);
-        OffsetDateTime endDateTime = OffsetDateTime.now().minusDays(1);
-
-        List<DataPoint> dataPoints = new ArrayList<>();
-
-        // uncomment as needed
-        Iterables.addAll(dataPoints, newBloodPressureDataPoints(startDateTime, endDateTime, 110, 110, 70, 70));
-//        Iterables.addAll(dataPoints, newBodyWeightDataPoints(startDateTime, endDateTime, 55, 60));
-        //              Iterables.addAll(dataPoints, newStepCountDataPoints(startDateTime, endDateTime, 120, 120, 90,
-        // 90));
-
-        dataPointWritingService.writeDataPoints(dataPoints);
-
-        log.info("A total of {} data point(s) have been generated.", dataPoints.size());
+        for (DataPointGenerator generator : dataPointGenerators) {
+            dataPointGeneratorMap.put(generator.getName(), generator);
+        }
     }
 
-    public Iterable<DataPoint<BloodPressure>> newBloodPressureDataPoints(OffsetDateTime startDateTime,
-                                                                         OffsetDateTime endDateTime,
-                                                                         double systolicStart, double systolicEnd, double diastolicStart, double diastolicEnd) {
+    public void run() throws Exception {
 
-        // TODO use limits that reflect parameters
-        RealValueRandomVariable systolicRandomVariable = new RealValueRandomVariable(3, 100d, 140d);
-        RealValueRandomVariable diastolicRandomVariable = new RealValueRandomVariable(3, 60d, 80d);
+        setMeasureGenerationRequestDefaults();
 
-        RealValueRandomVariableTrend systolicTrend =
-                new RealValueRandomVariableTrend(systolicRandomVariable, systolicStart, systolicEnd);
-        RealValueRandomVariableTrend diastolicTrend =
-                new RealValueRandomVariableTrend(diastolicRandomVariable, diastolicStart, diastolicEnd);
+        if (!areMeasureGenerationRequestsValid()) {
+            return;
+        }
 
-        MeasureGenerationRequest request = new MeasureGenerationRequest();
-        request.setStartDateTime(startDateTime);
-        request.setEndDateTime(endDateTime);
-        request.setMeanInterPointDuration(Duration.ofHours(24));
-        request.addMeasureValueTrend("systolic", systolicTrend);
-        request.addMeasureValueTrend("diastolic", diastolicTrend);
+        long totalWritten = 0;
 
-        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+        for (MeasureGenerationRequest request : dataGenerationSettings.getMeasureGenerationRequests()) {
 
-        return bloodPressureDataPointGenerationService.generateDataPoints(measureGroups);
+            Iterable<TimestampedValueGroup> valueGroups = valueGroupGenerationService.generateValueGroups(request);
+            DataPointGenerator<?> dataPointGenerator = dataPointGeneratorMap.get(request.getGeneratorName());
+
+            Iterable<? extends DataPoint<?>> dataPoints = dataPointGenerator.generateDataPoints(valueGroups);
+
+            long written = dataPointWritingService.writeDataPoints(dataPoints);
+            totalWritten += written;
+
+            log.info("The '{}' generator has written {} data point(s).", dataPointGenerator.getName(), written);
+        }
+
+        log.info("A total of {} data point(s) have been written.", totalWritten);
     }
 
-    public Iterable<DataPoint<BodyWeight>> newBodyWeightDataPoints(OffsetDateTime startDateTime,
-                                                                   OffsetDateTime endDateTime,
-                                                                   double weightStart, double weightEnd) {
 
-        double minimum = Math.min(weightStart, weightEnd) - 5;
-        double maximum = Math.max(weightStart, weightEnd) + 5;
-        RealValueRandomVariable weightRandomVariable = new RealValueRandomVariable(0.1, minimum, maximum);
+    private void setMeasureGenerationRequestDefaults() {
 
-        RealValueRandomVariableTrend weightTrend =
-                new RealValueRandomVariableTrend(weightRandomVariable, weightStart, weightEnd);
+        for (MeasureGenerationRequest request : dataGenerationSettings.getMeasureGenerationRequests()) {
 
-        MeasureGenerationRequest request = new MeasureGenerationRequest();
-        request.setStartDateTime(startDateTime);
-        request.setEndDateTime(endDateTime);
-        request.setMeanInterPointDuration(Duration.ofHours(24));
-        request.addMeasureValueTrend("weight", weightTrend);
+            if (request.getStartDateTime() == null) {
+                request.setStartDateTime(dataGenerationSettings.getStartDateTime());
+            }
 
-        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+            if (request.getEndDateTime() == null) {
+                request.setEndDateTime(dataGenerationSettings.getEndDateTime());
+            }
 
-        return bodyWeightDataPointGenerationService.generateDataPoints(measureGroups);
+            if (request.getMeanInterPointDuration() == null) {
+                request.setMeanInterPointDuration(dataGenerationSettings.getMeanInterPointDuration());
+            }
+
+            if (request.isSuppressNightTimeMeasures() == null) {
+                request.setSuppressNightTimeMeasures(dataGenerationSettings.isSuppressNightTimeMeasures());
+            }
+        }
     }
 
-    public Iterable<DataPoint<StepCount>> newStepCountDataPoints(OffsetDateTime startDateTime,
-                                                                 OffsetDateTime endDateTime,
-                                                                 double durationStart, double durationEnd, double stepsPerMinStart, double stepsPerMinEnd) {
+    /**
+     * @return true if the requests are valid, false otherwise
+     */
+    private boolean areMeasureGenerationRequestsValid() {
 
-        // TODO use limits that reflect parameters
-        RealValueRandomVariable durationInSecRandomVariable = new RealValueRandomVariable(100, 10, 1800);
-        RealValueRandomVariable stepsPerMinRandomVariable = new RealValueRandomVariable(15, 30, 125);
+        List<MeasureGenerationRequest> requests = dataGenerationSettings.getMeasureGenerationRequests();
+        Joiner joiner = Joiner.on(", ");
 
-        RealValueRandomVariableTrend durationInSecTrend =
-                new RealValueRandomVariableTrend(durationInSecRandomVariable, durationStart, durationEnd);
-        RealValueRandomVariableTrend stepsPerMinTrend =
-                new RealValueRandomVariableTrend(stepsPerMinRandomVariable, stepsPerMinStart, stepsPerMinEnd);
+        for (int i = 0; i < requests.size(); i++) {
+            MeasureGenerationRequest request = requests.get(i);
 
-        MeasureGenerationRequest request = new MeasureGenerationRequest();
-        request.setStartDateTime(startDateTime);
-        request.setEndDateTime(endDateTime);
-        request.setMeanInterPointDuration(Duration.ofMinutes(30));
-        request.addMeasureValueTrend("durationInSec", durationInSecTrend);
-        request.addMeasureValueTrend("stepsPerMin", stepsPerMinTrend);
+            Set<ConstraintViolation<MeasureGenerationRequest>> constraintViolations = validator.validate(request);
 
-        Iterable<MeasureGroup> measureGroups = measureGenerationService.generateMeasureGroups(request);
+            if (!constraintViolations.isEmpty()) {
+                log.error("The measure generation request with index {} is not valid.", i);
+                log.error(request.toString());
+                log.error(constraintViolations.toString());
+                return false;
+            }
 
-        return stepCountDataPointGenerationService.generateDataPoints(measureGroups);
+            if (!dataPointGeneratorMap.containsKey(request.getGeneratorName())) {
+                log.error("The data generator '{}' in request {} doesn't exist.", request.getGeneratorName(), i);
+                log.error(request.toString());
+                log.error("The allowed data generators are: {}", joiner.join(dataPointGeneratorMap.keySet()));
+                return false;
+            }
+
+            DataPointGenerator<?> generator = dataPointGeneratorMap.get(request.getGeneratorName());
+
+            Set<String> specifiedTrendKeys = request.getTrends().keySet();
+            Set<String> requiredTrendKeys = generator.getRequiredValueGroupKeys();
+
+            if (!specifiedTrendKeys.containsAll(requiredTrendKeys)) {
+                log.error("Request {} for generator '{}' is missing required trend keys.", i, generator.getName());
+                log.error("The generator requires the following missing keys: {}.",
+                        joiner.join(Sets.difference(requiredTrendKeys, specifiedTrendKeys)));
+                return false;
+            }
+
+            Set<String> supportedTrendKeys = generator.getSupportedValueGroupKeys();
+
+            if (!supportedTrendKeys.containsAll(specifiedTrendKeys)) {
+                log.warn("Request {} for generator '{}' specifies unsupported trend keys.", i, generator.getName());
+                log.warn("The generator supports the following keys: {}.", joiner.join(supportedTrendKeys));
+                log.warn("The following keys are being ignored: {}.",
+                        joiner.join(Sets.difference(specifiedTrendKeys, supportedTrendKeys)));
+            }
+        }
+
+        return true;
     }
-
-    // TODO add support for heart rate and physical activity
 }

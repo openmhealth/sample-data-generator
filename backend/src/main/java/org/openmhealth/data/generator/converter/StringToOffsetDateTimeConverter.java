@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2015 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,29 @@
  * limitations under the License.
  */
 
-package org.openmhealth.data.generator.service;
+package org.openmhealth.data.generator.converter;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.domain.omh.DataPoint;
-import org.openmhealth.schema.domain.omh.Measure;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import java.time.OffsetDateTime;
 
 
 /**
+ * A converter that creates {@link OffsetDateTime} objects from strings.
+ *
  * @author Emerson Farrugia
  */
-public interface DataPointGenerationService<T extends Measure> {
+@Component
+public class StringToOffsetDateTimeConverter implements Converter<String, OffsetDateTime> {
 
-    Iterable<DataPoint<T>> generateDataPoints(Iterable<MeasureGroup> measureGroups);
+    @Override
+    public OffsetDateTime convert(String source) {
+
+        if (source == null) {
+            return null;
+        }
+
+        return OffsetDateTime.parse(source);
+    }
 }

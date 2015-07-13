@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2015 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package org.openmhealth.data.generator.service;
+package org.openmhealth.data.generator.configuration;
 
-import org.openmhealth.data.generator.domain.MeasureGroup;
-import org.openmhealth.schema.domain.omh.HeartRate;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 
 /**
  * @author Emerson Farrugia
  */
-@Service
-public class HeartRateDataPointGenerationServiceImpl extends AbstractDataPointGenerationServiceImpl<HeartRate> {
+@Configuration
+public class ValidationConfiguration {
 
-    @Override
-    public HeartRate newMeasure(MeasureGroup measureGroup) {
-
-        return new HeartRate.Builder(measureGroup.getMeasureValue("rate"))
-                .setEffectiveTimeFrame(measureGroup.getEffectiveDateTime())
-                .build();
+    @Bean
+    public javax.validation.Validator localValidatorFactoryBean() {
+        return new LocalValidatorFactoryBean();
     }
 }

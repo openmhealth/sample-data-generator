@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
-apply plugin: 'spring-boot'
-apply plugin: 'io.spring.dependency-management'
+apply plugin: "java"
+apply plugin: "spring-boot"
+apply plugin: "io.spring.dependency-management"
 
 buildscript {
     repositories {
@@ -25,11 +25,11 @@ buildscript {
     }
 
     ext {
-        springBootVersion = '1.2.5.RELEASE'
+        springBootVersion = "1.2.5.RELEASE"
     }
 
     dependencies {
-        classpath 'io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE'
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
@@ -41,11 +41,11 @@ repositories {
 
 ext {
     javaVersion = 1.8
-    omhSchemaSdkVersion = '1.0.2'
+    omhSchemaSdkVersion = "1.0.2"
 }
 
-group = 'org.openmhealth.generator'
-version = '0.1.0-SNAPSHOT'
+group = "org.openmhealth.generator"
+version = "1.0.0-SNAPSHOT"
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
@@ -57,24 +57,37 @@ dependencyManagement {
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-math3:3.5'
-    compile 'com.google.guava:guava:18.0'
+    compile "org.apache.commons:commons-math3:3.5"
+    compile "com.google.guava:guava:18.0"
     compile "com.fasterxml.jackson.core:jackson-annotations"
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-    compile 'org.slf4j:jcl-over-slf4j'
-    compile 'org.slf4j:log4j-over-slf4j'
+    compile "org.slf4j:jcl-over-slf4j"
+    compile "org.slf4j:log4j-over-slf4j"
     compile "org.openmhealth.schema:omh-schema-sdk:${omhSchemaSdkVersion}"
-    compile 'org.slf4j:slf4j-api'
-    compile 'org.springframework:spring-beans'
+    compile "org.slf4j:slf4j-api"
+    compile "org.springframework:spring-beans"
     compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile 'org.springframework:spring-context'
+    compile "org.springframework:spring-context"
+    compile "javax.validation:validation-api:1.1.0.Final"
 
-    testCompile 'org.hamcrest:hamcrest-library'
-    testCompile 'org.mockito:mockito-core'
-    testCompile 'org.springframework:spring-test'
-    testCompile 'org.testng:testng:6.8.21'
+    testCompile "org.hamcrest:hamcrest-library"
+    testCompile "org.mockito:mockito-core"
+    testCompile "org.springframework:spring-test"
+    testCompile "org.testng:testng:6.8.21"
 
-    runtime 'ch.qos.logback:logback-classic'
+    runtime "ch.qos.logback:logback-classic"
+    runtime "org.hibernate:hibernate-validator"
+    runtime "javax.el:javax.el-api:3.0.0"
 }
+
+task copyArchiveJarToDockerContext(dependsOn: assemble, type: Copy) {
+    from 'build/libs'
+    into 'docker'
+    include "${jar.archiveName}"
+    rename { String fileName ->
+        fileName.replace("${jar.archiveName}", "${jar.baseName}.jar")
+    }
+}
+build.dependsOn copyArchiveJarToDockerContext
