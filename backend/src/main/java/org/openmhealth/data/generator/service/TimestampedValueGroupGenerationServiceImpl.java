@@ -59,7 +59,7 @@ public class TimestampedValueGroupGenerationServiceImpl implements TimestampedVa
                 break;
             }
 
-            if (request.isSuppressNightTimeMeasures() &&
+            if (request.isSuppressNightTimeMeasures() != null && request.isSuppressNightTimeMeasures() &&
                     (effectiveDateTime.getHour() >= NIGHT_TIME_START_HOUR ||
                             effectiveDateTime.getHour() < NIGHT_TIME_END_HOUR)) {
                 continue;

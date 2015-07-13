@@ -82,6 +82,11 @@ dependencies {
     runtime "javax.el:javax.el-api:3.0.0"
 }
 
+test {
+    useTestNG()
+    workingDir = '..'
+}
+
 task copyArchiveJarToDockerContext(dependsOn: assemble, type: Copy) {
     from 'build/libs'
     into 'docker'
