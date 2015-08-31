@@ -253,9 +253,7 @@ A graph of the generated data looks like this:
 
 ![Body weight no variance](resources/images/body-weight-no-variance.png?raw=true "Weight trend")
 
-> These graphs are generated using an interactive graph component from the Open mHealth [visualization library](http://www.openmhealth.org/documentation/#/visualize-data/visualization-library).
-We are in the process of releasing this code to help you create similar visualizations, and will update this message
- when we do.
+> These graphs are generated using an interactive chart component in our [web visualizations library](https://github.com/openmhealth/web-visualizations).
 
 A closer view of a few days in January looks like this:
 
