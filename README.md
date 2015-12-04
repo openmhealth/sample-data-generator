@@ -6,7 +6,7 @@ one containing data matching the data types, time scales, and trends they're int
  
 The data generator is a command-line tool that creates Open mHealth [data points](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_data-point) 
 for different kinds of measures. It reads a [configuration file](#configuration) to understand what data it should create, and writes that data
-out to the console or to a file. 
+out to the console or to a file. You can read a more detailed overview in [our blog post](http://www.openmhealth.org/years-of-health-data-yours-in-minutes/).
 
 ### Requirements
 
