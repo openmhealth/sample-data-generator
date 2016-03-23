@@ -74,6 +74,15 @@ data:
 #        maximum-value: 65
 #        standard-deviation: 0.1
 #
+#  - generator: body-height
+#    trends:
+#      ? height-in-m
+#      : start-value: 1.75
+#        end-value: 1.75
+#        minimum-value: 1.745
+#        maximum-value: 1.755
+#        standard-deviation: 0
+#
 #  - generator: step-count
 #    mean-inter-point-duration: PT60m
 #    suppress-night-time-measures: true
