@@ -35,8 +35,8 @@ import static org.openmhealth.schema.domain.omh.BloodPressureUnit.MM_OF_MERCURY;
 public class BloodPressureDataPointGenerator
         extends AbstractDataPointGeneratorImpl<BloodPressure> {
 
-    public static final String SYSTOLIC_KEY = "systolic-blood-pressure";
-    public static final String DIASTOLIC_KEY = "diastolic-blood-pressure";
+    public static final String SYSTOLIC_KEY = "systolic-in-mmhg";
+    public static final String DIASTOLIC_KEY = "diastolic-in-mmhg";
 
     @Override
     public String getName() {

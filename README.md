@@ -352,7 +352,7 @@ As you can see, the data points no longer have effective time frames at night.
 
 Some measure generators build measures by combining multiple trends. To define these trends, simply add more
 trend definitions to the `trends` key using the question-mark-colon notation. For example, to create blood pressure measures, 
-specify both `systolic-blood-pressure` and `diastolic-blood-pressure` trends to the `blood-pressure` generator as
+specify both `systolic-in-mmhg` and `diastolic-in-mmhg` trends to the `blood-pressure` generator as
 follows:
 
 ```yaml
@@ -363,13 +363,13 @@ measure-generation-requests:
   mean-inter-point-duration: PT12h
   suppress-night-time-measures: true
   trends:
-    ? systolic-blood-pressure
+    ? systolic-in-mmhg
     : start-value: 110
       end-value: 125
       minimum-value: 100
       maximum-value: 140
       standard-deviation: 3
-    ? diastolic-blood-pressure
+    ? diastolic-in-mmhg
     : start-value: 70
       end-value: 80
       minimum-value: 60
@@ -394,13 +394,13 @@ measure-generation-requests:
   mean-inter-point-duration: PT12h
   suppress-night-time-measures: true
   trends:
-    ? systolic-blood-pressure
+    ? systolic-in-mmhg
     : start-value: 110
       end-value: 125
       minimum-value: 100
       maximum-value: 140
       standard-deviation: 3
-    ? diastolic-blood-pressure
+    ? diastolic-in-mmhg
     : start-value: 70
       end-value: 80
       minimum-value: 60
@@ -435,13 +435,13 @@ data:
   - generator: blood-pressure
     mean-inter-point-duration: PT12h           # defaults to PT24h
     trends:
-      ? systolic-blood-pressure
+      ? systolic-in-mmhg
       : start-value: 110
         end-value: 125
         minimum-value: 100
         maximum-value: 140
         standard-deviation: 3
-      ? diastolic-blood-pressure
+      ? diastolic-in-mmhg
       : start-value: 70
         end-value: 80
         minimum-value: 60
@@ -484,7 +484,7 @@ The default configuration file also includes a sample configuration for each mea
 
 |name|Open mHealth measure schema|supported trend keys|required trend keys|
 |----|---------------------------|--------------------|-------------------| 
-|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-blood-pressure, diastolic-blood-pressure|same|
+|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-in-mmhg, diastolic-in-mmhg|same|
 |[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[omh:body-weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
 |[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
 |[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[omh:minutes-moderate-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|

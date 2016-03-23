@@ -52,13 +52,13 @@ data:
 #  measure-generation-requests:
 #  - generator: blood-pressure
 #    trends:
-#      ? systolic-blood-pressure
+#      ? systolic-in-mmhg
 #      : start-value: 110
 #        end-value: 125
 #        minimum-value: 100
 #        maximum-value: 140
 #        standard-deviation: 3
-#      ? diastolic-blood-pressure
+#      ? diastolic-in-mmhg
 #      : start-value: 70
 #        end-value: 80
 #        minimum-value: 60
