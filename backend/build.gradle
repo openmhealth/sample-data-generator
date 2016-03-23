@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Open mHealth
+ * Copyright 2016 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,6 @@ dependencies {
     runtime 'org.slf4j:jcl-over-slf4j'
     runtime 'org.slf4j:log4j-over-slf4j'
     runtime "ch.qos.logback:logback-classic"
-    runtime "org.yaml:snakeyaml"
 }
 
 test {
