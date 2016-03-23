@@ -16,7 +16,6 @@
 
 apply plugin: "java"
 apply plugin: "spring-boot"
-apply plugin: "io.spring.dependency-management"
 
 buildscript {
     repositories {
@@ -25,11 +24,10 @@ buildscript {
     }
 
     ext {
-        springBootVersion = "1.2.5.RELEASE"
+        springBootVersion = "1.3.3.RELEASE"
     }
 
     dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
@@ -41,20 +39,15 @@ repositories {
 
 ext {
     javaVersion = 1.8
-    omhSchemaSdkVersion = "1.0.2"
+    omhSchemaSdkVersion = "1.0.5"
 }
 
 group = "org.openmhealth.generator"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
-    }
-}
 
 dependencies {
     compile "org.apache.commons:commons-math3:3.5"
@@ -63,8 +56,6 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-    compile "org.slf4j:jcl-over-slf4j"
-    compile "org.slf4j:log4j-over-slf4j"
     compile "org.openmhealth.schema:omh-schema-sdk:${omhSchemaSdkVersion}"
     compile "org.slf4j:slf4j-api"
     compile "org.springframework:spring-beans"
@@ -77,9 +68,12 @@ dependencies {
     testCompile "org.springframework:spring-test"
     testCompile "org.testng:testng:6.8.21"
 
-    runtime "ch.qos.logback:logback-classic"
     runtime "org.hibernate:hibernate-validator"
     runtime "javax.el:javax.el-api:3.0.0"
+    runtime 'org.slf4j:jcl-over-slf4j'
+    runtime 'org.slf4j:log4j-over-slf4j'
+    runtime "ch.qos.logback:logback-classic"
+    runtime "org.yaml:snakeyaml"
 }
 
 test {
