@@ -123,3 +123,12 @@ data:
 #        minimum-value: 5
 #        maximum-value: 120
 #        standard-deviation: 20
+#
+#  - generator: body-fat-percentage
+#    trends:
+#      ? percentage
+#      : start-value: 30
+#        end-value: 30
+#        minimum-value: 28
+#        maximum-value: 32
+#        standard-deviation: 0.25
