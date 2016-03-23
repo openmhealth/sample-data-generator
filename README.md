@@ -167,6 +167,7 @@ At this point, only the user and source name settings are available. We'll add m
 
 The data generator can create data points for different measures. The measures which are supported so far are
 
+* [ambient temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_ambient-temperature)
 * [blood pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)
 * [body fat percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)
 * [body weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)
@@ -485,6 +486,7 @@ The default configuration file also includes a sample configuration for each mea
 
 |name|Open mHealth measure schema|supported trend keys|required trend keys|
 |----|---------------------------|--------------------|-------------------| 
+|[ambient-temperature](backend/src/main/java/org/openmhealth/data/generator/service/AmbientTemperatureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_ambient-temperature)|temperature-in-c|
 |[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-in-mmhg, diastolic-in-mmhg|same|
 |[body-fat-percentage](backend/src/main/java/org/openmhealth/data/generator/service/BodyFatPercentageDataPointGenerator.java)|[omh:body-fat-percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)|percentage|same|
 |[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[omh:body-weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|

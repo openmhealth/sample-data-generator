@@ -132,3 +132,12 @@ data:
 #        minimum-value: 28
 #        maximum-value: 32
 #        standard-deviation: 0.25
+#
+#  - generator: ambient-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 22
+#        end-value: 22
+#        minimum-value: 18
+#        maximum-value: 26
+#        standard-deviation: 1
