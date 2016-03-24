@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static java.util.UUID.randomUUID;
 import static org.openmhealth.schema.domain.omh.DataPointModality.SENSED;
@@ -65,44 +66,67 @@ public abstract class AbstractDataPointGeneratorImpl<T extends Measure>
      */
     public DataPoint<T> newDataPoint(T measure) {
 
-        OffsetDateTime creationDateTime = null;
         TimeInterval effectiveTimeInterval = measure.getEffectiveTimeFrame().getTimeInterval();
+        OffsetDateTime effectiveEndDateTime;
 
         if (effectiveTimeInterval != null) {
-            // set the creation date time to the end of the effective time interval
             if (effectiveTimeInterval.getEndDateTime() != null) {
-                creationDateTime = effectiveTimeInterval.getEndDateTime();
+                effectiveEndDateTime = effectiveTimeInterval.getEndDateTime();
             }
             else {
+                // use the duration to calculate the end date time of the interval
                 if (effectiveTimeInterval.getDuration() != null) {
-                    if (effectiveTimeInterval.getDuration().getTypedUnit() == DurationUnit.SECOND) {
-                        creationDateTime = effectiveTimeInterval.getStartDateTime()
-                                .plusSeconds(effectiveTimeInterval.getDuration().getValue().longValue());
+
+                    BiFunction<OffsetDateTime, Long, OffsetDateTime> plusFunction;
+
+                    switch (effectiveTimeInterval.getDuration().getTypedUnit()) {
+
+                        case SECOND:
+                            plusFunction = OffsetDateTime::plusSeconds;
+                            break;
+                        case MINUTE:
+                            plusFunction = OffsetDateTime::plusMinutes;
+                            break;
+                        case HOUR:
+                            plusFunction = OffsetDateTime::plusHours;
+                            break;
+                        case DAY:
+                            plusFunction = OffsetDateTime::plusDays;
+                            break;
+                        case WEEK:
+                            plusFunction = OffsetDateTime::plusWeeks;
+                            break;
+                        case MONTH:
+                            plusFunction = OffsetDateTime::plusMonths;
+                            break;
+                        case YEAR:
+                            plusFunction = OffsetDateTime::plusYears;
+                            break;
+                        default:
+                            throw new IllegalStateException("A time interval duration type isn't supported.");
                     }
-                    else if (effectiveTimeInterval.getDuration().getTypedUnit() == DurationUnit.MINUTE) {
-                        creationDateTime = effectiveTimeInterval.getStartDateTime()
-                                .plusMinutes(effectiveTimeInterval.getDuration().getValue().longValue());
-                    }
-                    else {
-                        throw new IllegalStateException("A creation date time can't be determined.");
-                    }
+
+                    effectiveEndDateTime = plusFunction.apply(effectiveTimeInterval.getStartDateTime(),
+                            effectiveTimeInterval.getDuration().getValue().longValue());
+                }
+                else {
+                    throw new IllegalStateException("An end date time can't be calculated without a duration.");
                 }
             }
         }
-        else {
-            // set the creation date time to the effective date time
-            creationDateTime = measure.getEffectiveTimeFrame().getDateTime();
+        else { // if this is a point in time measure
+            effectiveEndDateTime = measure.getEffectiveTimeFrame().getDateTime();
         }
 
         DataPointAcquisitionProvenance acquisitionProvenance =
                 new DataPointAcquisitionProvenance.Builder(sourceName)
                         .setModality(SENSED)
-                        .setSourceCreationDateTime(creationDateTime)
+                        .setSourceCreationDateTime(effectiveEndDateTime)
                         .build();
 
         DataPointHeader header =
                 new DataPointHeader.Builder(randomUUID().toString(), measure.getSchemaId(),
-                        creationDateTime.plusMinutes(1))
+                        effectiveEndDateTime.plusMinutes(1))
                         .setAcquisitionProvenance(acquisitionProvenance)
                         .setUserId(userId)
                         .build();

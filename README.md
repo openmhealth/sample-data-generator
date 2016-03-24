@@ -177,6 +177,7 @@ The data generator can create data points for different measures. The measures w
 * [heart rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)
 * [minutes of moderate activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)
 * [physical activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)
+* [sleep duration](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_sleep-duration)
 * [step count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)
 
 To create data points for a specific measure, the data generator uses a *measure generator* that is capable of
@@ -330,7 +331,7 @@ All generated values will fall within these bounds.
 
 You may want to suppress the generation of measures that occur at night, typically when modelling self-reported data.
 The generator has a *suppress-night-time-measures* key that skips data points whose effective time frames
- falls between 11pm and 5am. Our example configuration would look like
+ falls between 11pm and 6am. Our example configuration would look like
    
 ```yaml
 measure-generation-requests:
@@ -500,6 +501,7 @@ The default configuration file also includes a sample configuration for each mea
 |[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
 |[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[omh:minutes-moderate-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
 |[physical-activity](backend/src/main/java/org/openmhealth/data/generator/service/PhysicalActivityDataPointGenerator.java)|[omh:physical-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)|duration-in-seconds, distance-in-meters|duration-in-seconds|
+|[sleep-duration](backend/src/main/java/org/openmhealth/data/generator/service/SleepDurationDataPointGenerator.java)|[omh:sleep-duration](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_sleep-duration)|duration-in-hours|same|
 |[step-count](backend/src/main/java/org/openmhealth/data/generator/service/StepCountDataPointGenerator.java)|[omh:step-count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)|steps-per-minute, duration-in-seconds|same|
 
     

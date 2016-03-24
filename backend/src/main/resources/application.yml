@@ -28,7 +28,7 @@ data:
   mean-inter-point-duration: PT24h
 
   # true if measures having effective time frames at night should be suppressed, defaults to false
-  # a measure is considered to occur at night its effective time frame is after 23:00 or before 6:00
+  # a measure is considered to occur at night if its effective time frame is after 23:00 or before 6:00
   suppress-night-time-measures: false
 
   # a list of measure generation requests, with the following structure
@@ -49,7 +49,7 @@ data:
   # see the documentation at https://github.com/openmhealth/sample-data-generator for more information
   # by default, no data is generated; uncomment and modify the following configuration as needed
 
-#  measure-generation-requests:
+  measure-generation-requests:
 #  - generator: blood-pressure
 #    trends:
 #      ? systolic-in-mmhg
@@ -168,3 +168,12 @@ data:
 #        minimum-value: 36.4
 #        maximum-value: 38
 #        standard-deviation: 0.3
+#
+  - generator: sleep-duration
+    trends:
+      ? duration-in-hours
+      : start-value: 8
+        end-value: 8
+        minimum-value: 4
+        maximum-value: 12
+        standard-deviation: 0.75
