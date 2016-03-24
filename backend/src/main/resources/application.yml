@@ -150,3 +150,12 @@ data:
 #        minimum-value: 18
 #        maximum-value: 26
 #        standard-deviation: 1
+#
+#  - generator: blood-glucose
+#    trends:
+#      ? glucose-in-mg-per-dl
+#      : start-value: 90
+#        end-value: 100
+#        minimum-value: 85
+#        maximum-value: 140
+#        standard-deviation: 5
