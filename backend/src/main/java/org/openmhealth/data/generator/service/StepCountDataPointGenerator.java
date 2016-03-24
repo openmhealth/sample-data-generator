@@ -58,9 +58,9 @@ public class StepCountDataPointGenerator extends AbstractDataPointGeneratorImpl<
         DurationUnitValue duration = new DurationUnitValue(SECOND, valueGroup.getValue(DURATION_KEY));
         double stepsPerMin = valueGroup.getValue(STEPS_PER_MINUTE_KEY);
 
-        double stepCount = stepsPerMin * duration.getValue().doubleValue() / 60.0;
+        Double stepCount = stepsPerMin * duration.getValue().doubleValue() / 60.0;
 
-        return new StepCount.Builder(stepCount)
+        return new StepCount.Builder(stepCount.longValue())
                 .setEffectiveTimeFrame(ofStartDateTimeAndDuration(valueGroup.getTimestamp(), duration))
                 .build();
     }
