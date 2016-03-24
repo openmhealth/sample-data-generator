@@ -33,7 +33,7 @@ import static org.openmhealth.schema.domain.omh.LengthUnit.METER;
 @Component
 public class BodyHeightDataPointGenerator extends AbstractDataPointGeneratorImpl<BodyHeight> {
 
-    public static final String HEIGHT_KEY = "height-in-m";
+    public static final String HEIGHT_KEY = "height-in-meters";
 
     @Override
     public String getName() {

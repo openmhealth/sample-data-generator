@@ -31,7 +31,7 @@ import static java.util.Collections.singleton;
 @Component
 public class HeartRateDataPointGenerator extends AbstractDataPointGeneratorImpl<HeartRate> {
 
-    public static final String RATE_KEY = "rate-in-bpm";
+    public static final String RATE_KEY = "rate-in-beats-per-minute";
 
     @Override
     public String getName() {
