@@ -17,46 +17,45 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.TimestampedValueGroup;
-import org.openmhealth.schema.domain.omh.BloodGlucose;
-import org.openmhealth.schema.domain.omh.TypedUnitValue;
+import org.openmhealth.schema.domain.omh.BodyTemperature;
+import org.openmhealth.schema.domain.omh.TemperatureUnitValue;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 import static java.util.Collections.singleton;
-import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
+import static org.openmhealth.schema.domain.omh.BodyTemperature.MeasurementLocation.ORAL;
+import static org.openmhealth.schema.domain.omh.TemperatureUnit.CELSIUS;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Component
-public class BloodGlucoseDataPointGenerator
-        extends AbstractDataPointGeneratorImpl<BloodGlucose> {
+public class BodyTemperatureDataPointGenerator extends AbstractDataPointGeneratorImpl<BodyTemperature> {
 
-    public static final String GLUCOSE_KEY = "glucose-in-mg-per-dl";
+    public static final String TEMPERATURE_KEY = "temperature-in-c";
 
     @Override
     public String getName() {
-        return "blood-glucose";
-    }
-
-    @Override
-    public Set<String> getSupportedValueGroupKeys() {
-        return singleton(GLUCOSE_KEY);
+        return "body-temperature";
     }
 
     @Override
     public Set<String> getRequiredValueGroupKeys() {
-        return singleton(GLUCOSE_KEY);
+        return singleton(TEMPERATURE_KEY);
     }
 
     @Override
-    public BloodGlucose newMeasure(TimestampedValueGroup valueGroup) {
+    public Set<String> getSupportedValueGroupKeys() {
+        return singleton(TEMPERATURE_KEY);
+    }
 
-        // TODO set the specimen source once the SDK is updated to omh:blood-glucose:2.0
-        return new BloodGlucose.Builder(
-                new TypedUnitValue<>(MILLIGRAMS_PER_DECILITER, valueGroup.getValue(GLUCOSE_KEY)))
+    @Override
+    public BodyTemperature newMeasure(TimestampedValueGroup valueGroup) {
+
+        return new BodyTemperature.Builder(new TemperatureUnitValue(CELSIUS, valueGroup.getValue(TEMPERATURE_KEY)))
+                .setMeasurementLocation(ORAL)
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }

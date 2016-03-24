@@ -159,3 +159,12 @@ data:
 #        minimum-value: 85
 #        maximum-value: 140
 #        standard-deviation: 5
+#
+#  - generator: body-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 36.8
+#        end-value: 36.8
+#        minimum-value: 36.4
+#        maximum-value: 38
+#        standard-deviation: 0.3

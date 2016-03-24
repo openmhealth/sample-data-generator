@@ -172,6 +172,7 @@ The data generator can create data points for different measures. The measures w
 * [blood pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)
 * [body fat percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)
 * [body height](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-height)
+* [body temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-temperature)
 * [body weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)
 * [heart rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)
 * [minutes of moderate activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)
@@ -213,9 +214,10 @@ measure-generation-requests:
       end-value: 65
 ```          
 
-In the example, the name of the measure generator is `body-weight`. This is defined by the measure generator [included](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)
-in the data generator. It is possible to create different generators for the same measure, and you would differentiate 
-between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
+In the example, the name of the measure generator is `body-weight`. This is defined by the
+[measure generator](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)
+included in the data generator. It is possible to create different generators for the same measure, and you would
+differentiate between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
  generator uses a trend called `weight-in-kg`. The data generator will warn you if you use unrecognized keys, or fail
  to provide required keys. The full list of included measure generators and their keys is available in
  [Appendix A](#appendix-a-measure-generators).
@@ -493,6 +495,7 @@ The default configuration file also includes a sample configuration for each mea
 |[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-in-mmhg, diastolic-in-mmhg|same|
 |[body-fat-percentage](backend/src/main/java/org/openmhealth/data/generator/service/BodyFatPercentageDataPointGenerator.java)|[omh:body-fat-percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)|percentage|same|
 |[body-height](backend/src/main/java/org/openmhealth/data/generator/service/BodyHeightDataPointGenerator.java)|[omh:body-height](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-height)|height-in-m|same|
+|[body-temperature](backend/src/main/java/org/openmhealth/data/generator/service/BodyTemperatureDataPointGenerator.java)|[omh:body-temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-temperature)|temperature-in-c|same|
 |[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[omh:body-weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
 |[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
 |[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[omh:minutes-moderate-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
