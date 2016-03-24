@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.annotation.PostConstruct;
@@ -46,7 +45,6 @@ import java.util.*;
  * @author Emerson Farrugia
  */
 @SpringBootApplication
-@EnableConfigurationProperties
 public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);

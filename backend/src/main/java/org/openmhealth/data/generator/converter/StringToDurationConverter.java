@@ -16,6 +16,7 @@
 
 package org.openmhealth.data.generator.converter;
 
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,7 @@ import java.time.Duration;
  * @see {@link Duration#parse(CharSequence)}
  */
 @Component
+@ConfigurationPropertiesBinding
 public class StringToDurationConverter implements Converter<String, Duration> {
 
     @Override
