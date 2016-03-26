@@ -1,4 +1,4 @@
-# Open mHealth Sample Data Generator [![Build Status](https://travis-ci.org/openmhealth/sample-data-generator.svg?branch=master)](https://travis-ci.org/openmhealth/sample-data-generator)
+# Open mHealth Sample Data Generator [![Build Status](https://travis-ci.org/openmhealth/sample-data-generator.svg?branch=develop)](https://travis-ci.org/openmhealth/sample-data-generator)
 
 When people become familiar with [Open mHealth](http://www.openmhealth.org/), they often ask if there's a data set they can test against, especially 
 one containing data matching the data types, time scales, and trends they're interested in. This project is meant to help all
