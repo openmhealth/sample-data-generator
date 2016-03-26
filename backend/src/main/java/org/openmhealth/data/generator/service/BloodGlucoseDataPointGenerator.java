@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2016 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,49 +16,47 @@
 
 package org.openmhealth.data.generator.service;
 
-import com.google.common.collect.Sets;
 import org.openmhealth.data.generator.domain.TimestampedValueGroup;
-import org.openmhealth.schema.domain.omh.BloodPressure;
-import org.openmhealth.schema.domain.omh.DiastolicBloodPressure;
-import org.openmhealth.schema.domain.omh.SystolicBloodPressure;
+import org.openmhealth.schema.domain.omh.BloodGlucose;
+import org.openmhealth.schema.domain.omh.TypedUnitValue;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static org.openmhealth.schema.domain.omh.BloodPressureUnit.MM_OF_MERCURY;
+import static java.util.Collections.singleton;
+import static org.openmhealth.schema.domain.omh.BloodGlucoseUnit.MILLIGRAMS_PER_DECILITER;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Component
-public class BloodPressureDataPointGenerator
-        extends AbstractDataPointGeneratorImpl<BloodPressure> {
+public class BloodGlucoseDataPointGenerator
+        extends AbstractDataPointGeneratorImpl<BloodGlucose> {
 
-    public static final String SYSTOLIC_KEY = "systolic-in-mmhg";
-    public static final String DIASTOLIC_KEY = "diastolic-in-mmhg";
+    public static final String GLUCOSE_KEY = "glucose-in-mg-per-dl";
 
     @Override
     public String getName() {
-        return "blood-pressure";
+        return "blood-glucose";
     }
 
     @Override
     public Set<String> getSupportedValueGroupKeys() {
-        return Sets.newHashSet(SYSTOLIC_KEY, DIASTOLIC_KEY);
+        return singleton(GLUCOSE_KEY);
     }
 
     @Override
     public Set<String> getRequiredValueGroupKeys() {
-        return Sets.newHashSet(SYSTOLIC_KEY, DIASTOLIC_KEY);
+        return singleton(GLUCOSE_KEY);
     }
 
     @Override
-    public BloodPressure newMeasure(TimestampedValueGroup valueGroup) {
+    public BloodGlucose newMeasure(TimestampedValueGroup valueGroup) {
 
-        return new BloodPressure.Builder(
-                new SystolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(SYSTOLIC_KEY)),
-                new DiastolicBloodPressure(MM_OF_MERCURY, valueGroup.getValue(DIASTOLIC_KEY)))
+        // TODO set the specimen source once the SDK is updated to omh:blood-glucose:2.0
+        return new BloodGlucose.Builder(
+                new TypedUnitValue<>(MILLIGRAMS_PER_DECILITER, valueGroup.getValue(GLUCOSE_KEY)))
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }

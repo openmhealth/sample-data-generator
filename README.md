@@ -10,38 +10,42 @@ out to the console or to a file. You can read a more detailed overview in [our b
 
 ### Requirements
 
-- If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/) and nothing else.
-- If you want to run the generator natively instead, you'll need a Java 8 JRE.
-- If you want to modify the code, you'll need a Java 8 SDK.
+- If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/).
+- If you want to run the generator natively, you'll need a Java 8 JRE.
+- If you want to build or modify the code, you'll need a Java 8 SDK.
  
 ### Installation
 
-To install the generator using Docker, download the data generator image by running 
+To install the generator using Docker, open a terminal and download the data generator image by running
 
 `docker pull openmhealth/omh-sample-data-generator:latest`
 
-in
-a terminal. This will download around 500 MB of Docker images, most of which is the [OpenJDK 8 JRE](https://registry.hub.docker.com/_/java/). 
-Alternatively, if you don't want to use Docker, download the `data-generator-x.y.z.jar` JAR file from 
+If you don't want to use Docker but don't want to build the binary, download the `data-generator-x.y.z.jar` JAR file from
 the [latest release](https://github.com/openmhealth/sample-data-generator/releases) on GitHub. 
 You'll need a Java JRE to run it.
 
+If you want to modify and build the code, open a terminal, clone this repository and build the generator by running
+
+`./gradlew build`
+
+The assembled JAR file will be created in the `backend/build/libs` directory.
+
 ### Configuration 
 
-To configure the data generator, you'll modify a [YAML](https://en.wikipedia.org/wiki/YAML) configuration file called `application.yml`. If you haven't created
-a configuration file yet, the quickest way to get started is to copy the
-default configuration file from [here](backend/src/main/resources/application.yml) (it might be easier to copy if you
+To configure the data generator, you'll modify a [YAML](https://en.wikipedia.org/wiki/YAML) configuration file called
+`application.yml`. If you haven't created a configuration file yet, the quickest way to get started is to copy the
+[default configuration file](backend/src/main/resources/application.yml) (it's easier to copy if you
 click the 'Raw' button on that page.)
 
-> You can save the configuration file anywhere, unless you plan to run the generator using Docker and are using Boot2Docker on Mac OS X. 
-In that case, save the configuration somewhere under your `/Users` directory. This is due to a [restriction](https://docs.docker.com/userguide/dockervolumes/)
-in the directories the Docker daemon has access to when mounting volumes.
+> You can save the configuration file anywhere, unless you plan to run the generator using Docker and are on Mac OS X or Windows.
+In that case, save the configuration somewhere under your `/Users` or `C:\Users` directory. This is due to a [restriction](https://docs.docker.com/userguide/dockervolumes/)
+on the directories the Docker daemon has access to when mounting volumes.
  
 There's a big section below on the configuration file, but first let's make sure you can run the generator.
 
 ### Running
 
-To run the generator using Docker, and assuming you're in the same directory as the `application.yaml` configuration
+To run the generator using Docker, and assuming you're in the same directory as the `application.yml` configuration
 file, run
 
 ``docker run --rm -v `pwd`:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest``
@@ -52,12 +56,12 @@ the configuration file is in.
 Alternatively, to run the generator natively, navigate to the directory that contains the configuration file and 
 run
 
-`java -jar data-generator-x.y.z.jar`  
+`java -jar /path/to/data-generator-x.y.z.jar`
 
 In either case, you should see output that looks something like
 
 ```
-Starting Application on machine with PID 15861 (/Users/foo/backend.jar started by foo in /Users/foo)
+Starting Application on machine with PID 15861 (/Users/foo/data-generator-x.y.z.jar started by foo in /Users/foo)
 Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@6e8d6976: startup date [Sat Jul 11 16:09:24 CEST 2015]; root of context hierarchy
 Registering beans for JMX exposure on startup
 Started Application in 2.056 seconds (JVM running for 2.998)
@@ -167,11 +171,17 @@ At this point, only the user and source name settings are available. We'll add m
 
 The data generator can create data points for different measures. The measures which are supported so far are
 
+* [ambient temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_ambient-temperature)
+* [blood glucose](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-glucose)
 * [blood pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)
+* [body fat percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)
+* [body height](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-height)
+* [body temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-temperature)
 * [body weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)
 * [heart rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)
 * [minutes of moderate activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)
 * [physical activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)
+* [sleep duration](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_sleep-duration)
 * [step count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)
 
 To create data points for a specific measure, the data generator uses a *measure generator* that is capable of
@@ -209,9 +219,10 @@ measure-generation-requests:
       end-value: 65
 ```          
 
-In the example, the name of the measure generator is `body-weight`. This is defined by the measure generator [included](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)
-in the data generator. It is possible to create different generators for the same measure, and you would differentiate 
-between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
+In the example, the name of the measure generator is `body-weight`. This is defined by the
+[measure generator](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)
+included in the data generator. It is possible to create different generators for the same measure, and you would
+differentiate between generators by name. Each measure generator defines the trends it needs, and the `body-weight` measure
  generator uses a trend called `weight-in-kg`. The data generator will warn you if you use unrecognized keys, or fail
  to provide required keys. The full list of included measure generators and their keys is available in
  [Appendix A](#appendix-a-measure-generators).
@@ -322,7 +333,7 @@ All generated values will fall within these bounds.
 
 You may want to suppress the generation of measures that occur at night, typically when modelling self-reported data.
 The generator has a *suppress-night-time-measures* key that skips data points whose effective time frames
- falls between 11pm and 5am. Our example configuration would look like
+ falls between 11pm and 6am. Our example configuration would look like
    
 ```yaml
 measure-generation-requests:
@@ -350,7 +361,7 @@ As you can see, the data points no longer have effective time frames at night.
 
 Some measure generators build measures by combining multiple trends. To define these trends, simply add more
 trend definitions to the `trends` key using the question-mark-colon notation. For example, to create blood pressure measures, 
-specify both `systolic-blood-pressure` and `diastolic-blood-pressure` trends to the `blood-pressure` generator as
+specify both `systolic-in-mmhg` and `diastolic-in-mmhg` trends to the `blood-pressure` generator as
 follows:
 
 ```yaml
@@ -361,13 +372,13 @@ measure-generation-requests:
   mean-inter-point-duration: PT12h
   suppress-night-time-measures: true
   trends:
-    ? systolic-blood-pressure
+    ? systolic-in-mmhg
     : start-value: 110
       end-value: 125
       minimum-value: 100
       maximum-value: 140
       standard-deviation: 3
-    ? diastolic-blood-pressure
+    ? diastolic-in-mmhg
     : start-value: 70
       end-value: 80
       minimum-value: 60
@@ -392,13 +403,13 @@ measure-generation-requests:
   mean-inter-point-duration: PT12h
   suppress-night-time-measures: true
   trends:
-    ? systolic-blood-pressure
+    ? systolic-in-mmhg
     : start-value: 110
       end-value: 125
       minimum-value: 100
       maximum-value: 140
       standard-deviation: 3
-    ? diastolic-blood-pressure
+    ? diastolic-in-mmhg
     : start-value: 70
       end-value: 80
       minimum-value: 60
@@ -433,13 +444,13 @@ data:
   - generator: blood-pressure
     mean-inter-point-duration: PT12h           # defaults to PT24h
     trends:
-      ? systolic-blood-pressure
+      ? systolic-in-mmhg
       : start-value: 110
         end-value: 125
         minimum-value: 100
         maximum-value: 140
         standard-deviation: 3
-      ? diastolic-blood-pressure
+      ? diastolic-in-mmhg
       : start-value: 70
         end-value: 80
         minimum-value: 60
@@ -482,11 +493,17 @@ The default configuration file also includes a sample configuration for each mea
 
 |name|Open mHealth measure schema|supported trend keys|required trend keys|
 |----|---------------------------|--------------------|-------------------| 
-|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-blood-pressure, diastolic-blood-pressure|same|
+|[ambient-temperature](backend/src/main/java/org/openmhealth/data/generator/service/AmbientTemperatureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_ambient-temperature)|temperature-in-c|
+|[blood-glucose](backend/src/main/java/org/openmhealth/data/generator/service/BloodGlucoseDataPointGenerator.java)|[omh:blood-glucose](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-glucose)|glucose-in-mg-per-dl|same|
+|[blood-pressure](backend/src/main/java/org/openmhealth/data/generator/service/BloodPressureDataPointGenerator.java)|[omh:blood-pressure](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_blood-pressure)|systolic-in-mmhg, diastolic-in-mmhg|same|
+|[body-fat-percentage](backend/src/main/java/org/openmhealth/data/generator/service/BodyFatPercentageDataPointGenerator.java)|[omh:body-fat-percentage](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-fat-percentage)|percentage|same|
+|[body-height](backend/src/main/java/org/openmhealth/data/generator/service/BodyHeightDataPointGenerator.java)|[omh:body-height](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-height)|height-in-meters|same|
+|[body-temperature](backend/src/main/java/org/openmhealth/data/generator/service/BodyTemperatureDataPointGenerator.java)|[omh:body-temperature](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-temperature)|temperature-in-c|same|
 |[body-weight](backend/src/main/java/org/openmhealth/data/generator/service/BodyWeightDataPointGenerator.java)|[omh:body-weight](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_body-weight)|weight-in-kg|same|
-|[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-bpm|same|
+|[heart-rate](backend/src/main/java/org/openmhealth/data/generator/service/HeartRateDataPointGenerator.java)|[omh:heart-rate](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_heart-rate)|rate-in-beats-per-minute|same|
 |[minutes-moderate-activity](backend/src/main/java/org/openmhealth/data/generator/service/MinutesModerateActivityDataPointGenerator.java)|[omh:minutes-moderate-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_minutes-moderate-activity)|minutes|same|
 |[physical-activity](backend/src/main/java/org/openmhealth/data/generator/service/PhysicalActivityDataPointGenerator.java)|[omh:physical-activity](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_physical-activity)|duration-in-seconds, distance-in-meters|duration-in-seconds|
+|[sleep-duration](backend/src/main/java/org/openmhealth/data/generator/service/SleepDurationDataPointGenerator.java)|[omh:sleep-duration](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_sleep-duration)|duration-in-hours|same|
 |[step-count](backend/src/main/java/org/openmhealth/data/generator/service/StepCountDataPointGenerator.java)|[omh:step-count](http://www.openmhealth.org/documentation/#/schema-docs/schema-library/schemas/omh_step-count)|steps-per-minute, duration-in-seconds|same|
 
     

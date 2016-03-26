@@ -28,7 +28,7 @@ data:
   mean-inter-point-duration: PT24h
 
   # true if measures having effective time frames at night should be suppressed, defaults to false
-  # a measure is considered to occur at night its effective time frame is after 23:00 or before 6:00
+  # a measure is considered to occur at night if its effective time frame is after 23:00 or before 6:00
   suppress-night-time-measures: false
 
   # a list of measure generation requests, with the following structure
@@ -52,13 +52,13 @@ data:
 #  measure-generation-requests:
 #  - generator: blood-pressure
 #    trends:
-#      ? systolic-blood-pressure
+#      ? systolic-in-mmhg
 #      : start-value: 110
 #        end-value: 125
 #        minimum-value: 100
 #        maximum-value: 140
 #        standard-deviation: 3
-#      ? diastolic-blood-pressure
+#      ? diastolic-in-mmhg
 #      : start-value: 70
 #        end-value: 80
 #        minimum-value: 60
@@ -73,6 +73,15 @@ data:
 #        minimum-value: 50
 #        maximum-value: 65
 #        standard-deviation: 0.1
+#
+#  - generator: body-height
+#    trends:
+#      ? height-in-meters
+#      : start-value: 1.75
+#        end-value: 1.75
+#        minimum-value: 1.745
+#        maximum-value: 1.755
+#        standard-deviation: 0
 #
 #  - generator: step-count
 #    mean-inter-point-duration: PT60m
@@ -108,7 +117,7 @@ data:
 #
 #  - generator: heart-rate
 #    trends:
-#      ? rate-in-bpm
+#      ? rate-in-beats-per-minute
 #      : start-value: 80
 #        end-value: 80
 #        minimum-value: 60
@@ -123,3 +132,48 @@ data:
 #        minimum-value: 5
 #        maximum-value: 120
 #        standard-deviation: 20
+#
+#  - generator: body-fat-percentage
+#    trends:
+#      ? percentage
+#      : start-value: 30
+#        end-value: 30
+#        minimum-value: 28
+#        maximum-value: 32
+#        standard-deviation: 0.25
+#
+#  - generator: ambient-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 22
+#        end-value: 22
+#        minimum-value: 18
+#        maximum-value: 26
+#        standard-deviation: 1
+#
+#  - generator: blood-glucose
+#    trends:
+#      ? glucose-in-mg-per-dl
+#      : start-value: 90
+#        end-value: 100
+#        minimum-value: 85
+#        maximum-value: 140
+#        standard-deviation: 5
+#
+#  - generator: body-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 36.8
+#        end-value: 36.8
+#        minimum-value: 36.4
+#        maximum-value: 38
+#        standard-deviation: 0.3
+#
+#  - generator: sleep-duration
+#    trends:
+#      ? duration-in-hours
+#      : start-value: 8
+#        end-value: 8
+#        minimum-value: 4
+#        maximum-value: 12
+#        standard-deviation: 0.75
