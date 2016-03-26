@@ -45,6 +45,10 @@ ext {
 group = "org.openmhealth.generator"
 version = "1.1.0-SNAPSHOT"
 
+jar {
+    baseName = 'data-generator'
+}
+
 sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
 
@@ -90,3 +94,8 @@ task copyArchiveJarToDockerContext(dependsOn: assemble, type: Copy) {
     }
 }
 build.dependsOn copyArchiveJarToDockerContext
+
+task deleteArchiveJarFromDockerContext(type: Delete) {
+    delete "docker/${jar.baseName}.jar"
+}
+clean.dependsOn deleteArchiveJarFromDockerContext

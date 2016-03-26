@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2016 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,42 +17,49 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.TimestampedValueGroup;
-import org.openmhealth.schema.domain.omh.HeartRate;
+import org.openmhealth.schema.domain.omh.DurationUnitValue;
+import org.openmhealth.schema.domain.omh.SleepDuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 import static java.util.Collections.singleton;
+import static org.openmhealth.schema.domain.omh.DurationUnit.HOUR;
+import static org.openmhealth.schema.domain.omh.TimeInterval.ofStartDateTimeAndDuration;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Component
-public class HeartRateDataPointGenerator extends AbstractDataPointGeneratorImpl<HeartRate> {
+public class SleepDurationDataPointGenerator
+        extends AbstractDataPointGeneratorImpl<SleepDuration> {
 
-    public static final String RATE_KEY = "rate-in-beats-per-minute";
+    public static final String DURATION_KEY = "duration-in-hours";
 
     @Override
     public String getName() {
-        return "heart-rate";
+        return "sleep-duration";
     }
 
     @Override
     public Set<String> getRequiredValueGroupKeys() {
-        return singleton(RATE_KEY);
+        return singleton(DURATION_KEY);
     }
 
     @Override
     public Set<String> getSupportedValueGroupKeys() {
-        return singleton(RATE_KEY);
+        return singleton(DURATION_KEY);
     }
 
     @Override
-    public HeartRate newMeasure(TimestampedValueGroup valueGroup) {
+    public SleepDuration newMeasure(TimestampedValueGroup valueGroup) {
 
-        return new HeartRate.Builder(valueGroup.getValue(RATE_KEY))
-                .setEffectiveTimeFrame(valueGroup.getTimestamp())
-                .build();
+        DurationUnitValue duration = new DurationUnitValue(HOUR, valueGroup.getValue(DURATION_KEY));
+
+        SleepDuration.Builder builder = new SleepDuration.Builder(duration)
+                .setEffectiveTimeFrame(ofStartDateTimeAndDuration(valueGroup.getTimestamp(), duration));
+
+        return builder.build();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Open mHealth
+ * Copyright 2016 Open mHealth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,45 @@
 package org.openmhealth.data.generator.service;
 
 import org.openmhealth.data.generator.domain.TimestampedValueGroup;
-import org.openmhealth.schema.domain.omh.HeartRate;
+import org.openmhealth.schema.domain.omh.BodyTemperature;
+import org.openmhealth.schema.domain.omh.TemperatureUnitValue;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 import static java.util.Collections.singleton;
+import static org.openmhealth.schema.domain.omh.BodyTemperature.MeasurementLocation.ORAL;
+import static org.openmhealth.schema.domain.omh.TemperatureUnit.CELSIUS;
 
 
 /**
  * @author Emerson Farrugia
  */
 @Component
-public class HeartRateDataPointGenerator extends AbstractDataPointGeneratorImpl<HeartRate> {
+public class BodyTemperatureDataPointGenerator extends AbstractDataPointGeneratorImpl<BodyTemperature> {
 
-    public static final String RATE_KEY = "rate-in-beats-per-minute";
+    public static final String TEMPERATURE_KEY = "temperature-in-c";
 
     @Override
     public String getName() {
-        return "heart-rate";
+        return "body-temperature";
     }
 
     @Override
     public Set<String> getRequiredValueGroupKeys() {
-        return singleton(RATE_KEY);
+        return singleton(TEMPERATURE_KEY);
     }
 
     @Override
     public Set<String> getSupportedValueGroupKeys() {
-        return singleton(RATE_KEY);
+        return singleton(TEMPERATURE_KEY);
     }
 
     @Override
-    public HeartRate newMeasure(TimestampedValueGroup valueGroup) {
+    public BodyTemperature newMeasure(TimestampedValueGroup valueGroup) {
 
-        return new HeartRate.Builder(valueGroup.getValue(RATE_KEY))
+        return new BodyTemperature.Builder(new TemperatureUnitValue(CELSIUS, valueGroup.getValue(TEMPERATURE_KEY)))
+                .setMeasurementLocation(ORAL)
                 .setEffectiveTimeFrame(valueGroup.getTimestamp())
                 .build();
     }
