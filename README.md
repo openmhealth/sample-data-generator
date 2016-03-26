@@ -10,38 +10,42 @@ out to the console or to a file.
 
 ### Requirements
 
-- If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/) and nothing else.
-- If you want to run the generator natively instead, you'll need a Java 8 JRE.
-- If you want to modify the code, you'll need a Java 8 SDK.
+- If you want to run the generator using Docker, you'll need [Docker](https://docs.docker.com/installation/#installation/).
+- If you want to run the generator natively, you'll need a Java 8 JRE.
+- If you want to build or modify the code, you'll need a Java 8 SDK.
  
 ### Installation
 
-To install the generator using Docker, download the data generator image by running 
+To install the generator using Docker, open a terminal and download the data generator image by running
 
 `docker pull openmhealth/omh-sample-data-generator:latest`
 
-in
-a terminal. This will download around 500 MB of Docker images, most of which is the [OpenJDK 8 JRE](https://registry.hub.docker.com/_/java/). 
-Alternatively, if you don't want to use Docker, download the `data-generator-x.y.z.jar` JAR file from 
+If you don't want to use Docker but don't want to build the binary, download the `data-generator-x.y.z.jar` JAR file from
 the [latest release](https://github.com/openmhealth/sample-data-generator/releases) on GitHub. 
 You'll need a Java JRE to run it.
 
+If you want to modify and build the code, open a terminal, clone this repository and build the generator by running
+
+`./gradlew build`
+
+The assembled JAR file will be created in the `backend/build/libs` directory.
+
 ### Configuration 
 
-To configure the data generator, you'll modify a [YAML](https://en.wikipedia.org/wiki/YAML) configuration file called `application.yml`. If you haven't created
-a configuration file yet, the quickest way to get started is to copy the
-default configuration file from [here](backend/src/main/resources/application.yml) (it might be easier to copy if you
+To configure the data generator, you'll modify a [YAML](https://en.wikipedia.org/wiki/YAML) configuration file called
+`application.yml`. If you haven't created a configuration file yet, the quickest way to get started is to copy the
+[default configuration file](backend/src/main/resources/application.yml) (it's easier to copy if you
 click the 'Raw' button on that page.)
 
-> You can save the configuration file anywhere, unless you plan to run the generator using Docker and are using Boot2Docker on Mac OS X. 
-In that case, save the configuration somewhere under your `/Users` directory. This is due to a [restriction](https://docs.docker.com/userguide/dockervolumes/)
-in the directories the Docker daemon has access to when mounting volumes.
+> You can save the configuration file anywhere, unless you plan to run the generator using Docker and are on Mac OS X or Windows.
+In that case, save the configuration somewhere under your `/Users` or `C:\Users` directory. This is due to a [restriction](https://docs.docker.com/userguide/dockervolumes/)
+on the directories the Docker daemon has access to when mounting volumes.
  
 There's a big section below on the configuration file, but first let's make sure you can run the generator.
 
 ### Running
 
-To run the generator using Docker, and assuming you're in the same directory as the `application.yaml` configuration
+To run the generator using Docker, and assuming you're in the same directory as the `application.yml` configuration
 file, run
 
 `docker run --rm -v ``pwd``:/opt/omh-sample-data-generator/mount openmhealth/omh-sample-data-generator:latest`
@@ -52,12 +56,12 @@ of the configuration file.
 Alternatively, to run the generator natively, navigate to the directory that contains the configuration file and 
 run
 
-`java -jar data-generator-x.y.z.jar`  
+`java -jar /path/to/data-generator-x.y.z.jar`
 
 In either case, you should see output that looks something like
 
 ```
-Starting Application on machine with PID 15861 (/Users/foo/backend.jar started by foo in /Users/foo)
+Starting Application on machine with PID 15861 (/Users/foo/data-generator-x.y.z.jar started by foo in /Users/foo)
 Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@6e8d6976: startup date [Sat Jul 11 16:09:24 CEST 2015]; root of context hierarchy
 Registering beans for JMX exposure on startup
 Started Application in 2.056 seconds (JVM running for 2.998)

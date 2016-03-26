@@ -49,131 +49,131 @@ data:
   # see the documentation at https://github.com/openmhealth/sample-data-generator for more information
   # by default, no data is generated; uncomment and modify the following configuration as needed
 
-  measure-generation-requests:
-  - generator: blood-pressure
-    trends:
-      ? systolic-in-mmhg
-      : start-value: 110
-        end-value: 125
-        minimum-value: 100
-        maximum-value: 140
-        standard-deviation: 3
-      ? diastolic-in-mmhg
-      : start-value: 70
-        end-value: 80
-        minimum-value: 60
-        maximum-value: 90
-        standard-deviation: 3
-
-  - generator: body-weight
-    trends:
-      ? weight-in-kg
-      : start-value: 55
-        end-value: 60
-        minimum-value: 50
-        maximum-value: 65
-        standard-deviation: 0.1
-
-  - generator: body-height
-    trends:
-      ? height-in-meters
-      : start-value: 1.75
-        end-value: 1.75
-        minimum-value: 1.745
-        maximum-value: 1.755
-        standard-deviation: 0
-
-  - generator: step-count
-    mean-inter-point-duration: PT60m
-    suppress-night-time-measures: true
-    trends:
-      ? duration-in-seconds
-      : start-value: 300
-        end-value: 150
-        minimum-value: 10
-        maximum-value: 1800
-        standard-deviation: 50
-      ? steps-per-minute
-      : start-value: 90
-        end-value: 90
-        minimum-value: 30
-        maximum-value: 125
-        standard-deviation: 15
-
-  - generator: physical-activity
-    trends:
-      ? duration-in-seconds
-      : start-value: 1800
-        end-value: 1800
-        minimum-value: 300
-        maximum-value: 2400
-        standard-deviation: 600
-      ? distance-in-meters
-      : start-value: 5000
-        end-value: 5000
-        minimum-value: 500
-        maximum-value: 20000
-        standard-deviation: 1000
-
-  - generator: heart-rate
-    trends:
-      ? rate-in-beats-per-minute
-      : start-value: 80
-        end-value: 80
-        minimum-value: 60
-        maximum-value: 200
-        standard-deviation: 10
-
-  - generator: minutes-moderate-activity
-    trends:
-      ? minutes
-      : start-value: 30
-        end-value: 30
-        minimum-value: 5
-        maximum-value: 120
-        standard-deviation: 20
-
-  - generator: body-fat-percentage
-    trends:
-      ? percentage
-      : start-value: 30
-        end-value: 30
-        minimum-value: 28
-        maximum-value: 32
-        standard-deviation: 0.25
-
-  - generator: ambient-temperature
-    trends:
-      ? temperature-in-c
-      : start-value: 22
-        end-value: 22
-        minimum-value: 18
-        maximum-value: 26
-        standard-deviation: 1
-
-  - generator: blood-glucose
-    trends:
-      ? glucose-in-mg-per-dl
-      : start-value: 90
-        end-value: 100
-        minimum-value: 85
-        maximum-value: 140
-        standard-deviation: 5
-
-  - generator: body-temperature
-    trends:
-      ? temperature-in-c
-      : start-value: 36.8
-        end-value: 36.8
-        minimum-value: 36.4
-        maximum-value: 38
-        standard-deviation: 0.3
-
-  - generator: sleep-duration
-    trends:
-      ? duration-in-hours
-      : start-value: 8
-        end-value: 8
-        minimum-value: 4
-        maximum-value: 12
-        standard-deviation: 0.75
+#  measure-generation-requests:
+#  - generator: blood-pressure
+#    trends:
+#      ? systolic-in-mmhg
+#      : start-value: 110
+#        end-value: 125
+#        minimum-value: 100
+#        maximum-value: 140
+#        standard-deviation: 3
+#      ? diastolic-in-mmhg
+#      : start-value: 70
+#        end-value: 80
+#        minimum-value: 60
+#        maximum-value: 90
+#        standard-deviation: 3
+#
+#  - generator: body-weight
+#    trends:
+#      ? weight-in-kg
+#      : start-value: 55
+#        end-value: 60
+#        minimum-value: 50
+#        maximum-value: 65
+#        standard-deviation: 0.1
+#
+#  - generator: body-height
+#    trends:
+#      ? height-in-meters
+#      : start-value: 1.75
+#        end-value: 1.75
+#        minimum-value: 1.745
+#        maximum-value: 1.755
+#        standard-deviation: 0
+#
+#  - generator: step-count
+#    mean-inter-point-duration: PT60m
+#    suppress-night-time-measures: true
+#    trends:
+#      ? duration-in-seconds
+#      : start-value: 300
+#        end-value: 150
+#        minimum-value: 10
+#        maximum-value: 1800
+#        standard-deviation: 50
+#      ? steps-per-minute
+#      : start-value: 90
+#        end-value: 90
+#        minimum-value: 30
+#        maximum-value: 125
+#        standard-deviation: 15
+#
+#  - generator: physical-activity
+#    trends:
+#      ? duration-in-seconds
+#      : start-value: 1800
+#        end-value: 1800
+#        minimum-value: 300
+#        maximum-value: 2400
+#        standard-deviation: 600
+#      ? distance-in-meters
+#      : start-value: 5000
+#        end-value: 5000
+#        minimum-value: 500
+#        maximum-value: 20000
+#        standard-deviation: 1000
+#
+#  - generator: heart-rate
+#    trends:
+#      ? rate-in-beats-per-minute
+#      : start-value: 80
+#        end-value: 80
+#        minimum-value: 60
+#        maximum-value: 200
+#        standard-deviation: 10
+#
+#  - generator: minutes-moderate-activity
+#    trends:
+#      ? minutes
+#      : start-value: 30
+#        end-value: 30
+#        minimum-value: 5
+#        maximum-value: 120
+#        standard-deviation: 20
+#
+#  - generator: body-fat-percentage
+#    trends:
+#      ? percentage
+#      : start-value: 30
+#        end-value: 30
+#        minimum-value: 28
+#        maximum-value: 32
+#        standard-deviation: 0.25
+#
+#  - generator: ambient-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 22
+#        end-value: 22
+#        minimum-value: 18
+#        maximum-value: 26
+#        standard-deviation: 1
+#
+#  - generator: blood-glucose
+#    trends:
+#      ? glucose-in-mg-per-dl
+#      : start-value: 90
+#        end-value: 100
+#        minimum-value: 85
+#        maximum-value: 140
+#        standard-deviation: 5
+#
+#  - generator: body-temperature
+#    trends:
+#      ? temperature-in-c
+#      : start-value: 36.8
+#        end-value: 36.8
+#        minimum-value: 36.4
+#        maximum-value: 38
+#        standard-deviation: 0.3
+#
+#  - generator: sleep-duration
+#    trends:
+#      ? duration-in-hours
+#      : start-value: 8
+#        end-value: 8
+#        minimum-value: 4
+#        maximum-value: 12
+#        standard-deviation: 0.75
