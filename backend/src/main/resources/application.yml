@@ -177,3 +177,9 @@ data:
 #        minimum-value: 4
 #        maximum-value: 12
 #        standard-deviation: 0.75
+#  - generator: respiratory-rate
+#    trends:
+#      ? breaths-per-min
+#      : start-value: 5
+#        end-value: 30
+#        standard-deviation: 5
