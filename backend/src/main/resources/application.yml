@@ -177,3 +177,12 @@ data:
 #        minimum-value: 4
 #        maximum-value: 12
 #        standard-deviation: 0.75
+#  - generator: oxygen-saturation
+#    mean-inter-point-duration: PT60s
+#    trends:
+#      ? oxygen-saturation-level
+#      : start-value: 98
+#        end-value: 98
+#        minimum-value: 80
+#        maximum-value: 100
+#        standard-deviation: 5
